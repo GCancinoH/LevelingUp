@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "35508774182",
+    "project_id": "genarocancino-369",
+    "storage_bucket": "genarocancino-369.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:35508774182:android:a70b150d20af7d44f34de7",
+        "android_client_info": {
+          "package_name": "com.gcancino.levelingup"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "35508774182-371apaei9kkh6k6rvajtf8runcdompc7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDZIn1V3_DI_arewLYfXQfCcEb8gpQmfPw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "35508774182-371apaei9kkh6k6rvajtf8runcdompc7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

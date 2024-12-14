@@ -1,0 +1,23 @@
+package com.gcancino.levelingup.data.models
+
+import com.gcancino.levelingup.data.models.patient.Improvement
+import com.gcancino.levelingup.data.models.patient.InitialData
+import com.gcancino.levelingup.data.models.patient.Objectives
+import java.util.Date
+
+data class Patient(
+    val uid: String,
+    val displayName: String,
+    val email: String,
+    val isEmailVerified: Boolean? = false,
+    val photoUrl: String? = "",
+    val isOnline: Boolean? = false,
+    val birthday: Date? = null,
+    val age: Int? = null,
+    val gender: String? = null,
+    val phoneNumber: String? = null,
+    val initialData: InitialData? = null,
+    val improvements: List<Improvement>? = listOf(),
+    val objectives: Objectives? = null
+
+)
