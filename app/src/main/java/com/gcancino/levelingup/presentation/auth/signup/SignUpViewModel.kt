@@ -25,6 +25,19 @@ class SignUpViewModel(
 
     var isPasswordVisible by mutableStateOf(false)
         private set
+
     private val _authState = MutableStateFlow<Resource<Patient>?>(null)
     var authState : StateFlow<Resource<Patient>?> = _authState.asStateFlow()
+
+    fun onNameChange(newName: String) {}
+    fun onEmailChange(newEmail: String) {}
+    fun onPasswordChange(newPassword: String) {}
+    fun onPasswordVisibilityChange() { isPasswordVisible = !isPasswordVisible }
+    fun signUp() {}
+    fun signUpWithGoogle() {}
+
+    private fun isNameValid(): Boolean = name.isNotBlank()
+    private fun isEmailValid(): Boolean = email.isNotBlank()
+    private fun isPasswordValid(): Boolean = password.isNotBlank()
+
 }

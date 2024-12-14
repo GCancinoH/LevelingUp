@@ -1,5 +1,6 @@
 package com.gcancino.levelingup.presentation.auth.signin
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.mutableStateOf
@@ -40,14 +41,16 @@ class SignInViewModel(
     }
 
     fun signIn() {
-        _authState.value = Resource.Loading(null)
+        _authState.value = null
         viewModelScope.launch {
             try {
                 authUseCase.signInWithEmail(email, password).collect { resource ->
+                    Log.d("SignInViewModel", "Resource: $resource")
                     _authState.value = resource
                 }
             } catch (e: Exception) {
                 _authState.value = Resource.Error(e.localizedMessage ?: "Sign in failed")
+                Log.d("SigninViewModel", _authState.value.toString())
             }
         }
     }

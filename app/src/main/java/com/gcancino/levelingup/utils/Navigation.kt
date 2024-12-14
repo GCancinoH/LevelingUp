@@ -14,6 +14,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.gcancino.levelingup.presentation.auth.signin.SignInScreen
+import com.gcancino.levelingup.presentation.auth.signup.SignUpScreen
 import com.gcancino.levelingup.presentation.init.InitScreen
 import com.gcancino.levelingup.presentation.user.dashboard.DashboardScreen
 import kotlinx.coroutines.CoroutineScope
@@ -60,9 +61,16 @@ fun Navigation(
             composable("signIn") {
                 SignInScreen(
                     viewModel = appContainer.signInViewModel,
-                    onSuccessSignIn = { navController.navigate("dashboard") },
-                    onSignUpClick = { navController.navigate("signUp") },
-                    onForgotPasswordClick = { navController.navigate("forgotPassword") }
+                    navController = navController,
+                    snackBarHostState = snackbarHostState,
+                )
+            }
+            composable("signUp") {
+                SignUpScreen(
+                    viewModel = appContainer.signUpViewModel,
+                    snackBarHostState = snackbarHostState,
+                    onSignUpSuccess = { navController.navigate("improvementScreen") },
+                    onSignInBtnClick = { navController.navigate("signIn") }
                 )
             }
             composable("forgotPassword") {

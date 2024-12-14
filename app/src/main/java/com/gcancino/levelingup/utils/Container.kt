@@ -10,7 +10,8 @@ class Container {
     private val authRepository by lazy { AuthRepositoryImp() }
     private val authUseCase by lazy { AuthUseCase(authRepository) }
 
-    // Viewmodels
+    // View Models
     val initViewModel by lazy { InitScreenViewModel(authUseCase) }
     val signInViewModel by lazy { SignInViewModel(authUseCase) }
+    val signUpViewModel by lazy { SignUpViewModel(authUseCase) }
 }

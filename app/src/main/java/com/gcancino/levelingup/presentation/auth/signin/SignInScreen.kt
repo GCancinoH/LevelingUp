@@ -1,5 +1,6 @@
 package com.gcancino.levelingup.presentation.auth.signin
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -27,7 +28,13 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -37,16 +44,43 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.gcancino.levelingup.domain.entities.Resource
 import com.gcancino.levelingup.R
+import kotlinx.coroutines.launch
 
 @Composable
 fun SignInScreen(
     viewModel: SignInViewModel,
-    onSuccessSignIn: () -> Unit,
-    onSignUpClick: () -> Unit,
-    onForgotPasswordClick: () -> Unit
+    navController: NavHostController,
+    snackBarHostState: SnackbarHostState
 ) {
+    val authState by viewModel.authState.collectAsState()
+    val scope = rememberCoroutineScope()
+
+    LaunchedEffect(authState) {
+        when (val state = authState) {
+            is Resource.Success -> {
+                Log.d("SignInScreen", "Resource.Success")
+                navController.navigate("dashboard") {
+                    popUpTo("initScreen") {
+                        inclusive = true
+                    }
+                }
+            }
+            is Resource.Error -> {
+                Log.d("SignInScreen", "Resource.Error")
+                scope.launch {
+                    snackBarHostState.showSnackbar(
+                        message = state.message ?: "Sign in failed",
+                        duration = SnackbarDuration.Short
+                    )
+                }
+            }
+            else -> { Log.d("SignInScreen", "Resource.Loading") }
+        }
+    }
+
     Column(
         modifier = Modifier.fillMaxSize()
             .padding(16.dp),
@@ -157,7 +191,13 @@ fun SignInScreen(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.End
         ) {
-            TextButton(onClick = { onForgotPasswordClick }) {
+            TextButton(onClick = {
+                navController.navigate("dashboard") {
+                    popUpTo("initScreen") {
+                        inclusive = true
+                    }
+                }
+            }) {
                 Text(text = "Forgot Password?")
             }
         }
@@ -173,12 +213,14 @@ fun SignInScreen(
                 disabledContentColor = Color.Unspecified
             )
         ) {
-            if (viewModel.authState == Resource.Loading(null)) {
-                CircularProgressIndicator(
-                    color = Color.White
-                )
-            } else {
-                Text(text = "Sign In!")
+            when(authState) {
+                is Resource.Loading -> {
+                    CircularProgressIndicator(
+                        color = Color.White,
+                        modifier = Modifier.size(24.dp)
+                    )
+                }
+                else -> Text("Sign In")
             }
         }
 
@@ -188,7 +230,13 @@ fun SignInScreen(
             horizontalArrangement = Arrangement.Center,
         ) {
             Text(text = "Don't have an account?")
-            TextButton(onClick = { onSignUpClick() }) {
+            TextButton(onClick = {
+                navController.navigate("dashboard") {
+                    popUpTo("initScreen") {
+                        inclusive = true
+                    }
+                }
+            }) {
                 Text(text = "Sign Up")
             }
         }

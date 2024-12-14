@@ -1,5 +1,6 @@
 package com.gcancino.levelingup.data.repositories.auth
 
+import android.util.Log
 import com.gcancino.levelingup.data.models.Patient
 import com.gcancino.levelingup.domain.entities.Resource
 import com.google.firebase.auth.FirebaseAuth
@@ -37,12 +38,12 @@ class AuthRepositoryImp() {
             when(patient) {
                 null -> emit(Resource.Error("Authentication failed"))
                 else -> patient.let {
-                    Patient(
+                    val user = Patient(
                         uid = it.uid,
                         email = it.email ?: "",
                         displayName = it.displayName ?: "",
                     )
-
+                    emit(Resource.Success(user))
                 }
             }
         } catch (e: FirebaseAuthException) {
