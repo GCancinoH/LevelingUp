@@ -85,7 +85,7 @@ fun SignUpScreen(
         Image(
             painter = painterResource(id = R.drawable.levelingup),
             contentDescription = "Logo",
-            modifier = Modifier.width(200.dp)
+            modifier = Modifier.width(150.dp)
         )
         Spacer(modifier = Modifier.height(8.dp))
         // Google SignIn Button

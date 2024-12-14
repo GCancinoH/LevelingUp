@@ -34,7 +34,9 @@ class SignUpViewModel(
     fun onPasswordChange(newPassword: String) {}
     fun onPasswordVisibilityChange() { isPasswordVisible = !isPasswordVisible }
     fun signUp() {}
-    fun signUpWithGoogle() {}
+    fun signUpWithGoogle() {
+
+    }
 
     private fun isNameValid(): Boolean = name.isNotBlank()
     private fun isEmailValid(): Boolean = email.isNotBlank()
