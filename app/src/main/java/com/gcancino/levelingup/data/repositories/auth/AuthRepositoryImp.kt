@@ -1,6 +1,6 @@
 package com.gcancino.levelingup.data.repositories.auth
 
-import android.util.Log
+//import android.util.Log
 import com.gcancino.levelingup.data.models.Patient
 import com.gcancino.levelingup.data.models.patient.Progress
 import com.gcancino.levelingup.data.models.patient.progress.CategoryType
@@ -66,7 +66,7 @@ class AuthRepositoryImp() {
         }
     }
 
-    fun signInWithGoogle(idToken: String)
+    fun signInWithGoogle()
     {
         /* TODO() */
     }
