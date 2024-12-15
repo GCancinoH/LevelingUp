@@ -1,8 +1,11 @@
 package com.gcancino.levelingup.data.models
 
+import com.gcancino.levelingup.data.models.patient.Attributes
 import com.gcancino.levelingup.data.models.patient.Improvement
 import com.gcancino.levelingup.data.models.patient.InitialData
 import com.gcancino.levelingup.data.models.patient.Objectives
+import com.gcancino.levelingup.data.models.patient.Progress
+import com.gcancino.levelingup.data.models.patient.Streak
 import java.util.Date
 
 data class Patient(
@@ -18,6 +21,10 @@ data class Patient(
     val phoneNumber: String? = null,
     val initialData: InitialData? = null,
     val improvements: List<Improvement>? = listOf(),
-    val objectives: Objectives? = null
+    val objectives: Objectives? = null,
+    val progress: Progress? = null,
+    val attributes: Attributes? = null,
+    val streak: Streak? = null
+
 
 )

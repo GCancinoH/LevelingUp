@@ -2,15 +2,19 @@ package com.gcancino.levelingup.data.repositories.auth
 
 import android.util.Log
 import com.gcancino.levelingup.data.models.Patient
+import com.gcancino.levelingup.data.models.patient.Progress
+import com.gcancino.levelingup.data.models.patient.progress.CategoryType
 import com.gcancino.levelingup.domain.entities.Resource
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
 
 class AuthRepositoryImp() {
     private val auth = FirebaseAuth.getInstance()
+    private val db = FirebaseFirestore.getInstance()
     
     fun getCurrentUser(): Flow<Resource<Patient>> = flow {
         emit(Resource.Loading())
@@ -73,8 +77,25 @@ class AuthRepositoryImp() {
             val result = auth.createUserWithEmailAndPassword(email, password).await()
             val patient = result.user
             when (patient) {
-                null -> emit(Resource.Error("Authentication failed"))
+                null -> emit(Resource.Error("User creation failed"))
                 else -> {
+                    patient.let {
+                        val recentPatient = Patient(
+                            uid = it.uid,
+                            email = it.email ?: "",
+                            displayName = name,
+                            progress = Progress(
+                                level = 1,
+                                exp = 0,
+                                currentCategory = CategoryType.CATEGORY_BEGINNER
+                            )
+                        )
+                        // Save patient data
+                        db.collection("patients").document(it.uid)
+                            .set(recentPatient)
+
+                        emit(Resource.Success(recentPatient))
+                    }
                 }
             }
         } catch (e: FirebaseAuthException) {

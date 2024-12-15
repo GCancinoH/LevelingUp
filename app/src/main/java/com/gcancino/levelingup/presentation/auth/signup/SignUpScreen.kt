@@ -25,6 +25,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SnackbarDuration
@@ -143,7 +144,14 @@ fun SignUpScreen(
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Text,
                 imeAction = ImeAction.Next
-            )
+            ),
+            isError = viewModel.nameError != null,
+            supportingText = {
+                if (viewModel.nameError != null) {
+                    Text(text = viewModel.nameError!!,
+                        color = MaterialTheme.colorScheme.error)
+                }
+            }
         )
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -164,7 +172,14 @@ fun SignUpScreen(
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Email,
                 imeAction = ImeAction.Next
-            )
+            ),
+            isError = viewModel.emailError != null,
+            supportingText = {
+                if (viewModel.emailError != null) {
+                    Text(text = viewModel.emailError!!,
+                        color = MaterialTheme.colorScheme.error)
+                }
+            }
         )
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -199,7 +214,14 @@ fun SignUpScreen(
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Password,
                 imeAction = ImeAction.Done
-            )
+            ),
+            isError = viewModel.passwordError != null,
+            supportingText = {
+                if (viewModel.passwordError != null) {
+                    Text(text = viewModel.passwordError!!,
+                        color = MaterialTheme.colorScheme.error)
+                }
+            }
         )
 
         // SignIn Button
