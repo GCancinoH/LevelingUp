@@ -10,14 +10,14 @@ class AuthUseCase(
     fun signInWithEmail(email: String, password: String) =
         repository.signInWithEmail(email, password)
 
-    fun signInWithGoogle(idToken: String) =
-        repository.signInWithGoogle(idToken)
+    fun signInWithGoogle() =
+        repository.signInWithGoogle()
 
     fun signUpWithEmail(name: String, email: String, password: String) =
         repository.signUpWithEmail(name, email, password)
 
-    fun signUpWithGoogle(idToken: String) =
-        repository.signInWithGoogle(idToken)
+    fun signUpWithGoogle() =
+        repository.signInWithGoogle()
 
     fun signOut() = repository.signOut()
 }

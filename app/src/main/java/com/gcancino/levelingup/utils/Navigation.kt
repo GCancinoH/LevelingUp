@@ -15,6 +15,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.gcancino.levelingup.presentation.auth.signin.SignInScreen
 import com.gcancino.levelingup.presentation.auth.signup.SignUpScreen
+import com.gcancino.levelingup.presentation.auth.signup.improvements.ImprovementScreen
 import com.gcancino.levelingup.presentation.init.InitScreen
 import com.gcancino.levelingup.presentation.user.dashboard.DashboardScreen
 import kotlinx.coroutines.CoroutineScope
@@ -36,7 +37,7 @@ fun Navigation(
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = "initScreen",
+            startDestination = "improvements",
             modifier = Modifier.padding(innerPadding)
         ) {
             composable("initScreen") {
@@ -71,6 +72,11 @@ fun Navigation(
                     snackBarHostState = snackbarHostState,
                     onSignUpSuccess = { navController.navigate("improvementScreen") },
                     onSignInBtnClick = { navController.navigate("signIn") }
+                )
+            }
+            composable("improvements") {
+                ImprovementScreen(
+                    viewModel = appContainer.improvementViewModel
                 )
             }
             composable("forgotPassword") {

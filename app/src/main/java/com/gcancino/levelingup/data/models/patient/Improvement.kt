@@ -1,11 +1,10 @@
 package com.gcancino.levelingup.data.models.patient
 
 enum class Improvement {
-    YOGA,
-    FITNESS,
-    FLEXIBILITY,
+    STRENGTH,
+    ENDURANCE,
     MOBILITY,
+    SELF_DEVELOPMENT,
     NUTRITION,
-    HABITS,
-    SELF_DEVELOPMENT
+    HABITS
 }
