@@ -22,10 +22,11 @@ class MainActivity : ComponentActivity() {
         // Setting app orientation
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
 
+
         enableEdgeToEdge()
         setContent {
             LevelingUpTheme {
-                Navigation()
+                Navigation(this)
             }
         }
     }

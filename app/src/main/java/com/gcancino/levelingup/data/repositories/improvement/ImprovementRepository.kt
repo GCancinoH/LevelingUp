@@ -18,7 +18,18 @@ class ImprovementRepository {
                 .await()
             emit(Resource.Success(Unit))
         } catch (e: FirebaseFirestoreException) {
-            emit(Resource.Error(e.localizedMessage ?: "Error saving improvements"))
+            val errorMessage = when (e.code) {
+                FirebaseFirestoreException.Code.UNAVAILABLE -> "Service unavailable"
+                FirebaseFirestoreException.Code.UNAUTHENTICATED -> "Authentication failed"
+                FirebaseFirestoreException.Code.PERMISSION_DENIED -> "Permission denied"
+                FirebaseFirestoreException.Code.RESOURCE_EXHAUSTED -> "Resource exhausted"
+                FirebaseFirestoreException.Code.ABORTED -> "Transaction aborted"
+                FirebaseFirestoreException.Code.ALREADY_EXISTS -> "Document already exists"
+                FirebaseFirestoreException.Code.CANCELLED -> "Transaction cancelled"
+                FirebaseFirestoreException.Code.NOT_FOUND -> "Document not found"
+                else -> "Error saving the data: ${e.message}"
+            }
+            emit(Resource.Error(errorMessage))
         }
     }
 }

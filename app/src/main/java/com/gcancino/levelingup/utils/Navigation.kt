@@ -1,5 +1,6 @@
 package com.gcancino.levelingup.utils
 
+import android.content.Context
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -16,18 +17,19 @@ import androidx.navigation.compose.rememberNavController
 import com.gcancino.levelingup.presentation.auth.signin.SignInScreen
 import com.gcancino.levelingup.presentation.auth.signup.SignUpScreen
 import com.gcancino.levelingup.presentation.auth.signup.improvements.ImprovementScreen
+import com.gcancino.levelingup.presentation.auth.signup.initialData.InitialDataScreen
 import com.gcancino.levelingup.presentation.init.InitScreen
 import com.gcancino.levelingup.presentation.user.dashboard.DashboardScreen
 import kotlinx.coroutines.CoroutineScope
 
 @Composable
 fun Navigation(
-
+    context: Context
 ) {
     val navController: NavHostController = rememberNavController()
     val coroutineScope: CoroutineScope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
-    val appContainer = Container()
+    val appContainer = Container(context)
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -37,7 +39,7 @@ fun Navigation(
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = "improvements",
+            startDestination = "initialData",
             modifier = Modifier.padding(innerPadding)
         ) {
             composable("initScreen") {
@@ -77,6 +79,11 @@ fun Navigation(
             composable("improvements") {
                 ImprovementScreen(
                     viewModel = appContainer.improvementViewModel
+                )
+            }
+            composable("initialData") {
+                InitialDataScreen(
+                    viewModel = appContainer.initialDataViewModel
                 )
             }
             composable("forgotPassword") {

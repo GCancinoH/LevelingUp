@@ -124,4 +124,17 @@ class AuthRepositoryImp() {
         }
     }
 
+    fun getPatientName() : String {
+        val patient = auth.currentUser
+        return when (patient) {
+            null -> ""
+            else -> patient.displayName ?: ""
+        }
+    }
+
+    fun isPatientEmailVerified() : Boolean? {
+        val patient = auth.currentUser
+        return patient?.isEmailVerified
+    }
+
 }

@@ -65,6 +65,7 @@ dependencies {
     // Google
     implementation(libs.google.barcode.scanner)
     implementation(libs.google.auth)
+    implementation(libs.google.gson)
 
     // Firebase
     implementation(platform(libs.google.firebaseBom))

@@ -20,4 +20,8 @@ class AuthUseCase(
         repository.signInWithGoogle()
 
     fun signOut() = repository.signOut()
+
+    fun getPatientName() = repository.getPatientName()
+
+    fun isPatientEmailVerified() = repository.isPatientEmailVerified()
 }
