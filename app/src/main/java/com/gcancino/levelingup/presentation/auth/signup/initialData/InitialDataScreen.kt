@@ -28,6 +28,13 @@ fun InitialDataScreen(
                 exit = fadeOut(animationSpec = tween(durationMillis = 500)) + slideOutVertically(targetOffsetY = { -40 }, animationSpec = tween(durationMillis = 300))
             ) { FirstStep(viewModel) }
         }
+        1 -> {
+            AnimatedVisibility(
+                visible = viewModel.currentStep == 1,
+                enter = fadeIn(animationSpec = tween(durationMillis = 500)) + slideInVertically(initialOffsetY = { -40 }, animationSpec = tween(durationMillis = 300)),
+                exit = fadeOut(animationSpec = tween(durationMillis = 500)) + slideOutVertically(targetOffsetY = { -40 }, animationSpec = tween(durationMillis = 300))
+            ) { SecondStep(viewModel) }
+        }
     }
 
 }

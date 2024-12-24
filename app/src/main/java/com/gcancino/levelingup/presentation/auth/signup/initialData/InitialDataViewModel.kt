@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import java.util.Date
 
 class InitialDataViewModel(
 
@@ -13,6 +14,7 @@ class InitialDataViewModel(
     var weight by mutableStateOf("")
     var height by mutableStateOf("")
     var bmi by mutableStateOf("")
+    var birthdate by mutableStateOf<Date?>(null)
     var age by mutableStateOf("")
     var gender by mutableStateOf("")
     var visceralFat by mutableStateOf("")
@@ -21,6 +23,7 @@ class InitialDataViewModel(
     var photos by mutableStateOf<List<Uri>>(emptyList())
 
     var currentStep by mutableIntStateOf(0)
+    var showBMI by mutableStateOf(false)
 
     fun nextStep() { currentStep++ }
 
@@ -28,25 +31,7 @@ class InitialDataViewModel(
 
     fun onWeightChange(newWeight: String) { weight = newWeight }
     fun onHeightChange(newHeight: String) { height = newHeight }
-
-    fun calculateBMI() : String
-    {
-        val bmi = weight.toDouble() / (height.toDouble() * height.toDouble())
-        return bmi.toString()
-    }
-
-    fun bmiInterpretation(bmi: String): String
-    {
-        val bmiDouble = bmi.toDouble()
-        return when (bmiDouble) {
-            in 0.0..18.4 -> "Underweight"
-            in 18.5..24.9 -> "Normal weight"
-            in 25.0..29.9 -> "Overweight"
-            else -> "Obesity"
-        }
-    }
-
-    val showBIM: Boolean = weight.isNotEmpty() && height.isNotEmpty()
-
+    fun onBMIChange(newBMI: String) { bmi = newBMI }
+    fun onBirthdateChange(newBirthdate: Date) { birthdate = newBirthdate }
 
 }

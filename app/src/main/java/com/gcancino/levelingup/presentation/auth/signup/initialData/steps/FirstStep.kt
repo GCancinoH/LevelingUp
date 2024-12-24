@@ -88,12 +88,6 @@ fun FirstStep(viewModel: InitialDataViewModel) {
                     imeAction = ImeAction.Done
                 )
             )
-            when {
-                viewModel.showBIM -> {
-                    Text("Your BMI is ${viewModel.calculateBMI()} which interpretation according to the CDC is ${viewModel.bmiInterpretation(viewModel.calculateBMI())}")
-                }
-                else -> {}
-            }
         }
 
         // Button
