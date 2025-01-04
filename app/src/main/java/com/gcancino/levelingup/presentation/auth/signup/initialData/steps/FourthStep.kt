@@ -15,16 +15,20 @@ import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.gcancino.levelingup.presentation.auth.signup.initialData.InitialDataViewModel
-import com.gcancino.levelingup.ui.components.OutlinedDateField
-
+import com.gcancino.levelingup.ui.components.OutlinedDropDown
 
 @Composable
-fun ThirdStep(viewModel: InitialDataViewModel) {
+fun FourthStep(viewModel: InitialDataViewModel) {
+    val options = viewModel.getObjectives()
+    val selectedOption by viewModel.selectedObjective.collectAsState()
+
     Box(
         modifier = Modifier.fillMaxSize()
             .padding(16.dp)
@@ -36,16 +40,15 @@ fun ThirdStep(viewModel: InitialDataViewModel) {
             verticalArrangement = Arrangement.Center
         ) {
             Text(
-                text = "What's your birthday?",
+                text = "What's your main goal in this moment?",
                 style = MaterialTheme.typography.headlineMedium
             )
             Spacer(modifier = Modifier.height(16.dp))
-
-            OutlinedDateField(
-                value = viewModel.birthdate,
-                onValueChange = { viewModel.onBirthdateChange(it) },
-                error = null,
-                label = "Birthday"
+            OutlinedDropDown(
+                options = options,
+                selectedOption = selectedOption,
+                onOptionSelected = { viewModel.selectObjective(it) },
+                label = ""
             )
         }
 
@@ -64,5 +67,4 @@ fun ThirdStep(viewModel: InitialDataViewModel) {
             )
         }
     }
-
 }
