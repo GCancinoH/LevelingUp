@@ -64,4 +64,8 @@ class InitialDataViewModel(
     fun onHeightChange(newHeight: String) { height = newHeight }
     fun onBMIChange(newBMI: String) { bmi = newBMI }
     fun onBirthdateChange(newBirthdate: Date) { birthdate = newBirthdate }
+    fun onVisceralFatChange(newVisceralFat: String) { visceralFat = newVisceralFat }
+    fun onFatPercentageChange(newFatPercentage: String) { fatPercentage = newFatPercentage }
+    fun onMusclePercentageChange(newMusclePercentage: String) { musclePercentage = newMusclePercentage }
+
 }

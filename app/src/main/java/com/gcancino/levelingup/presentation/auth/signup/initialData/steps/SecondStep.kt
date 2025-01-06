@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
@@ -56,18 +58,16 @@ fun SecondStep(viewModel: InitialDataViewModel) {
         }
 
         // Button
-        IconButton(
+        Button(
             onClick = { viewModel.nextStep() },
-            colors = IconButtonDefaults.iconButtonColors(
+            modifier = Modifier.fillMaxWidth()
+                .align(Alignment.BottomEnd),
+            colors = ButtonDefaults.buttonColors(
                 containerColor = Color.White,
                 contentColor = Color.Black
-            ),
-            modifier = Modifier.align(Alignment.BottomEnd)
-        ) {
-            Icon(
-                imageVector = Icons.AutoMirrored.Filled.ArrowForward,
-                contentDescription = null
             )
+        ) {
+            Text(text = "Next")
         }
     }
 }

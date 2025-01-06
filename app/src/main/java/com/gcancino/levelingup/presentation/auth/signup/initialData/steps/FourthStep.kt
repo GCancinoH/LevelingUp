@@ -5,10 +5,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
@@ -31,11 +34,9 @@ fun FourthStep(viewModel: InitialDataViewModel) {
 
     Box(
         modifier = Modifier.fillMaxSize()
-            .padding(16.dp)
+            .padding(16.dp),
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
@@ -53,7 +54,18 @@ fun FourthStep(viewModel: InitialDataViewModel) {
         }
 
         // Button
-        IconButton(
+        Button(
+            onClick = { viewModel.nextStep() },
+            modifier = Modifier.fillMaxWidth()
+                .align(Alignment.BottomEnd),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color.White,
+                contentColor = Color.Black
+            )
+        ) {
+            Text(text = "Next")
+        }
+        /*IconButton(
             onClick = { viewModel.nextStep() },
             colors = IconButtonDefaults.iconButtonColors(
                 containerColor = Color.White,
@@ -65,6 +77,6 @@ fun FourthStep(viewModel: InitialDataViewModel) {
                 imageVector = Icons.AutoMirrored.Filled.ArrowForward,
                 contentDescription = null
             )
-        }
+        }*/
     }
 }

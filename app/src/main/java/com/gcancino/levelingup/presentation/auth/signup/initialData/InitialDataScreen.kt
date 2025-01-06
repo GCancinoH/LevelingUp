@@ -10,61 +10,53 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 
 import com.gcancino.levelingup.presentation.auth.signup.initialData.steps.FirstStep
 import com.gcancino.levelingup.presentation.auth.signup.initialData.steps.FourthStep
 import com.gcancino.levelingup.presentation.auth.signup.initialData.steps.SecondStep
 import com.gcancino.levelingup.presentation.auth.signup.initialData.steps.ThirdStep
+import com.gcancino.levelingup.presentation.auth.signup.initialData.steps.FifthStep
+import com.gcancino.levelingup.presentation.auth.signup.initialData.steps.SixStep
+import com.gcancino.levelingup.presentation.auth.signup.initialData.steps.SeventhStep
 
-@OptIn(ExperimentalAnimationApi::class)
+@OptIn(ExperimentalAnimationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun InitialDataScreen(
     viewModel: InitialDataViewModel
 ) {
-    AnimatedContent(
-        targetState = viewModel.currentStep,
-        transitionSpec = {
-            fadeIn(animationSpec = tween(500)) togetherWith
-                    fadeOut(animationSpec = tween(500)) using
-                    SizeTransform { initialSize, targetSize ->
-                        keyframes {
-                            durationMillis = 500
-                            initialSize at 0 using LinearOutSlowInEasing
-                            targetSize at 300 using FastOutSlowInEasing
+    Box(modifier = Modifier.padding(16.dp).fillMaxSize()) {
+        AnimatedContent(
+            targetState = viewModel.currentStep,
+            transitionSpec = {
+                fadeIn(animationSpec = tween(500)) togetherWith
+                        fadeOut(animationSpec = tween(500)) using
+                        SizeTransform { initialSize, targetSize ->
+                            keyframes {
+                                durationMillis = 500
+                                initialSize at 0 using LinearOutSlowInEasing
+                                targetSize at 300 using FastOutSlowInEasing
+                            }
                         }
-                    }
-        }
-    ) { targetStep ->
-        when (targetStep) {
-            0 -> FirstStep(viewModel)
-            1 -> SecondStep(viewModel)
-            2 -> ThirdStep(viewModel)
-            3 -> FourthStep(viewModel)
+            }, label = ""
+        ) { targetStep ->
+            when (targetStep) {
+                0 -> FirstStep(viewModel)
+                1 -> SecondStep(viewModel)
+                2 -> ThirdStep(viewModel)
+                3 -> FourthStep(viewModel)
+                4 -> FifthStep(viewModel)
+                5 -> SixStep(viewModel)
+                6 -> SeventhStep(viewModel)
+            }
         }
     }
-    /*when (viewModel.currentStep) {
-        0 -> {
-            AnimatedVisibility(
-                visible = viewModel.currentStep == 0,
-                enter = fadeIn(animationSpec = tween(durationMillis = 500)) + slideInVertically(initialOffsetY = { -40 }, animationSpec = tween(durationMillis = 300)),
-                exit = fadeOut(animationSpec = tween(durationMillis = 500)) + slideOutVertically(targetOffsetY = { -40 }, animationSpec = tween(durationMillis = 300))
-            ) { FirstStep(viewModel) }
-        }
-        1 -> {
-            AnimatedVisibility(
-                visible = viewModel.currentStep == 1,
-                enter = fadeIn(animationSpec = tween(durationMillis = 500)) + slideInVertically(initialOffsetY = { -40 }, animationSpec = tween(durationMillis = 300)),
-                exit = fadeOut(animationSpec = tween(durationMillis = 500)) + slideOutVertically(targetOffsetY = { -40 }, animationSpec = tween(durationMillis = 300))
-            ) { SecondStep(viewModel) }
-        }
-        2 -> {
-            AnimatedVisibility(
-                visible = viewModel.currentStep == 2,
-                enter = fadeIn(animationSpec = tween(durationMillis = 500)) + slideInVertically(initialOffsetY = { -40 }, animationSpec = tween(durationMillis = 300)),
-                exit = fadeOut(animationSpec = tween(durationMillis = 500)) + slideOutVertically(targetOffsetY = { -40 }, animationSpec = tween(durationMillis = 300))
-            ) { ThirdStep(viewModel) }
-        }
-    }*/
-
 }

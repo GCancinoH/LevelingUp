@@ -3,24 +3,17 @@ package com.gcancino.levelingup.presentation.auth.signup.initialData.steps
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowForward
-import androidx.compose.material.icons.filled.Height
 import androidx.compose.material.icons.filled.MonitorWeight
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -33,32 +26,32 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.gcancino.levelingup.presentation.auth.signup.initialData.InitialDataViewModel
 
-@Composable
-fun FirstStep(viewModel: InitialDataViewModel) {
+@Composable()
+fun SeventhStep(viewModel: InitialDataViewModel) {
     Box(
         modifier = Modifier.fillMaxSize()
-            .padding(16.dp)
+            .padding(16.dp),
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
             Text(
-                text = "What's your weight and height?",
+                text = "What's your visceral fat?",
                 style = MaterialTheme.typography.headlineMedium
             )
             Spacer(modifier = Modifier.height(16.dp))
             // Weight TextField
             OutlinedTextField(
-                value = viewModel.weight,
-                onValueChange = { viewModel.onWeightChange(it) },
+                value = viewModel.visceralFat,
+                onValueChange = { viewModel.onVisceralFatChange(it) },
                 leadingIcon = {
                     Icon(
-                        imageVector = Icons.Filled.MonitorWeight,
+                        imageVector = Icons.Default.MonitorWeight,
                         contentDescription = "Name"
                     )
                 },
-                label = { Text("Your Weight") },
+                label = { Text("Visceral Fat") },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
                 maxLines = 1,
@@ -67,30 +60,8 @@ fun FirstStep(viewModel: InitialDataViewModel) {
                     imeAction = ImeAction.Next
                 )
             )
-            Spacer(modifier = Modifier.height(24.dp))
-
-            // Height TextField
-            OutlinedTextField(
-                value = viewModel.height,
-                onValueChange = { viewModel.onHeightChange(it) },
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Filled.Height,
-                        contentDescription = "Height"
-                    )
-                },
-                label = { Text("Your Height") },
-                modifier = Modifier.fillMaxWidth(),
-                singleLine = true,
-                maxLines = 1,
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Decimal,
-                    imeAction = ImeAction.Done
-                )
-            )
         }
 
-        // Button
         Button(
             onClick = { viewModel.nextStep() },
             modifier = Modifier.fillMaxWidth()
@@ -100,20 +71,7 @@ fun FirstStep(viewModel: InitialDataViewModel) {
                 contentColor = Color.Black
             )
         ) {
-            Text(text = "Next")
+            Text(text = "Done")
         }
-        /*IconButton(
-            onClick = { viewModel.nextStep() },
-            colors = IconButtonDefaults.iconButtonColors(
-                containerColor = Color.White,
-                contentColor = Color.Black
-            ),
-            modifier = Modifier.align(Alignment.BottomEnd)
-        ) {
-            Icon(
-                imageVector = Icons.AutoMirrored.Filled.ArrowForward,
-                contentDescription = null
-            )
-        }*/
     }
 }
