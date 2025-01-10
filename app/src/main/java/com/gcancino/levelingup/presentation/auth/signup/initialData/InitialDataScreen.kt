@@ -52,7 +52,7 @@ fun InitialDataScreen(
         animationSpec = ProgressIndicatorDefaults.ProgressAnimationSpec,
         label = ""
     )
-
+    // Progress bar
     Row(
         modifier = Modifier.fillMaxWidth()
             .padding(32.dp),

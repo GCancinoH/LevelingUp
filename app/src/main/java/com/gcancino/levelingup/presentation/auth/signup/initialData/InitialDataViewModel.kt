@@ -29,7 +29,6 @@ class InitialDataViewModel(
     val progressIncrement = 0.125f
 
     var currentStep by mutableIntStateOf(0)
-    var showBMI by mutableStateOf(false)
 
     private val _objectives = listOf(
         "Lose Body Fat",
