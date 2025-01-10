@@ -111,7 +111,8 @@ fun Navigation(
             }
             composable("initialData") {
                 InitialDataScreen(
-                    viewModel = appContainer.initialDataViewModel
+                    viewModel = appContainer.initialDataViewModel,
+                    context = context
                 )
             }
             composable("forgotPassword") {

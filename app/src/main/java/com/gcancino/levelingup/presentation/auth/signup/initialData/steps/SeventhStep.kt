@@ -71,7 +71,7 @@ fun SeventhStep(viewModel: InitialDataViewModel) {
                 contentColor = Color.Black
             )
         ) {
-            Text(text = "Done")
+            Text(text = "Next")
         }
     }
 }

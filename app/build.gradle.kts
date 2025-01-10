@@ -67,6 +67,7 @@ dependencies {
     implementation(libs.google.barcode.scanner)
     implementation(libs.google.auth)
     implementation(libs.google.gson)
+    implementation(libs.google.permissions)
 
     // Firebase
     implementation(platform(libs.google.firebaseBom))
@@ -89,10 +90,16 @@ dependencies {
     annotationProcessor(libs.room.compiler)
     annotationProcessor(libs.room.processor)
 
+    // Camera
+    implementation(libs.camerax.core)
+    //implementation(libs.camerax.compose)
+    implementation(libs.camerax.lifecycle)
+    implementation(libs.camera.view)
+
     // Retrofit
     implementation(libs.retrofit)
     implementation(libs.retrofit.converter)
-
+    implementation(libs.coil.image)
     implementation("com.onesignal:OneSignal:[5.0.0, 5.99.99]")
 
     testImplementation(libs.junit)

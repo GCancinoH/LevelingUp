@@ -33,8 +33,6 @@ fun ThirdStep(viewModel: InitialDataViewModel) {
             .padding(16.dp)
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
