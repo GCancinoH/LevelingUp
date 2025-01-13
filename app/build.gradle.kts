@@ -100,7 +100,7 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.retrofit.converter)
     implementation(libs.coil.image)
-    implementation("com.onesignal:OneSignal:[5.0.0, 5.99.99]")
+    //implementation("com.onesignal:OneSignal:[5.0.0, 5.99.99]")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

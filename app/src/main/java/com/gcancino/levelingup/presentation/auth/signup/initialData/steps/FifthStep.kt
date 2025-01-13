@@ -30,7 +30,6 @@ import com.gcancino.levelingup.presentation.auth.signup.initialData.InitialDataV
 fun FifthStep(viewModel: InitialDataViewModel) {
     Box(
         modifier = Modifier.fillMaxSize()
-            .padding(16.dp),
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,

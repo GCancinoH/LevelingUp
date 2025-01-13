@@ -13,6 +13,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -52,45 +53,50 @@ fun InitialDataScreen(
         animationSpec = ProgressIndicatorDefaults.ProgressAnimationSpec,
         label = ""
     )
-    // Progress bar
-    Row(
-        modifier = Modifier.fillMaxWidth()
-            .padding(32.dp),
-        verticalAlignment = Alignment.CenterVertically
+    Column(
+        modifier = Modifier.fillMaxSize().
+            padding(16.dp)
     ) {
-        LinearProgressIndicator(
-            progress = { animatedProgress },
-            modifier = Modifier.fillMaxWidth(),
-            color = Color(0xFF4A69BD),
-            trackColor = Color.White,
+        // Progress bar
+        Row(
+            modifier = Modifier.fillMaxWidth()
+                .padding(horizontal = 16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            LinearProgressIndicator(
+                progress = { animatedProgress },
+                modifier = Modifier.fillMaxWidth(),
+                color = Color(0xFF4A69BD),
+                trackColor = Color.White,
 
-            )
-    }
-    Spacer(modifier = Modifier.height(32.dp))
-    Box(modifier = Modifier.padding(16.dp).fillMaxSize()) {
-        AnimatedContent(
-            targetState = viewModel.currentStep,
-            transitionSpec = {
-                fadeIn(animationSpec = tween(500)) togetherWith
-                        fadeOut(animationSpec = tween(500)) using
-                        SizeTransform { initialSize, targetSize ->
-                            keyframes {
-                                durationMillis = 500
-                                initialSize at 0 using LinearOutSlowInEasing
-                                targetSize at 300 using FastOutSlowInEasing
+                )
+        }
+        Spacer(modifier = Modifier.height(32.dp))
+        Box(modifier = Modifier.fillMaxSize()) {
+            AnimatedContent(
+                targetState = viewModel.currentStep,
+                transitionSpec = {
+                    fadeIn(animationSpec = tween(500)) togetherWith
+                            fadeOut(animationSpec = tween(500)) using
+                            SizeTransform { initialSize, targetSize ->
+                                keyframes {
+                                    durationMillis = 500
+                                    initialSize at 0 using LinearOutSlowInEasing
+                                    targetSize at 300 using FastOutSlowInEasing
+                                }
                             }
-                        }
-            }, label = ""
-        ) { targetStep ->
-            when (targetStep) {
-                0 -> FirstStep(viewModel)
-                1 -> SecondStep(viewModel)
-                2 -> ThirdStep(viewModel)
-                3 -> FourthStep(viewModel)
-                4 -> FifthStep(viewModel)
-                5 -> SixStep(viewModel)
-                6 -> SeventhStep(viewModel)
-                7 -> EightStep(viewModel, context)
+                }, label = ""
+            ) { targetStep ->
+                when (targetStep) {
+                    0 -> FirstStep(viewModel)
+                    1 -> SecondStep(viewModel)
+                    2 -> ThirdStep(viewModel)
+                    3 -> FourthStep(viewModel)
+                    4 -> FifthStep(viewModel)
+                    5 -> SixStep(viewModel)
+                    6 -> SeventhStep(viewModel)
+                    7 -> EightStep(viewModel, context)
+                }
             }
         }
     }

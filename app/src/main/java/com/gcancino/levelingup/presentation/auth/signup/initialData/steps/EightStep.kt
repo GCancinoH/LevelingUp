@@ -7,30 +7,35 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Camera
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import coil3.compose.AsyncImage
 import com.gcancino.levelingup.presentation.auth.signup.initialData.InitialDataViewModel
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
@@ -51,22 +56,12 @@ fun EightStep(
         )
     )
     val photos by viewModel.photos.collectAsState()
-    val tmpPhoto by viewModel.tmpPhoto.collectAsState()
+    val gridState = rememberLazyGridState()
 
     val galleryLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetMultipleContents()
     ) { uris ->
         viewModel.addPhotos(uris)
-    }
-
-    val cameraLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.TakePicture()
-    ) { success ->
-        if(success) {
-            tmpPhoto?.let {
-            //viewModel.addPhotos(it) }
-            }
-        }
     }
 
     LaunchedEffect(Unit) {
@@ -87,27 +82,41 @@ fun EightStep(
                 style = MaterialTheme.typography.headlineMedium
             )
             Spacer(modifier = Modifier.height(16.dp))
-            Row(
+            Button(
+                onClick = { galleryLauncher.launch("image/*") },
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.White,
+                    contentColor = Color.Black
+                ),
+                contentPadding = ButtonDefaults.ButtonWithIconContentPadding,
             ) {
-                Button(
-                    onClick = { galleryLauncher.launch("image/*") },
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.White,
-                        contentColor = Color.Black
-                    ),
-                    contentPadding = ButtonDefaults.ButtonWithIconContentPadding,
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.Camera,
-                        contentDescription = "",
-                        modifier = Modifier.size(ButtonDefaults.IconSize)
-                    )
-                    Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                    Text(text = "Choose from Gallery")
-                }
+                Icon(
+                    imageVector = Icons.Filled.Camera,
+                    contentDescription = "",
+                    modifier = Modifier.size(ButtonDefaults.IconSize)
+                )
+                Spacer(Modifier.size(ButtonDefaults.IconSpacing))
+                Text(text = "Choose from Gallery")
+            }
+            Spacer(modifier = Modifier.height(16.dp))
+            LazyHorizontalGrid(
+                state = gridState,
+                rows = GridCells.Fixed(3),
+                modifier = Modifier.padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                items(
+                    count = photos.size,
+                    key = { index -> photos[index] },
+                    contentType = { index -> photos[index] },
+                    itemContent = { index ->
+                        PhotoItem(
+                            uri = photos[index],
+                            onDelete = { viewModel.removePhoto(photos[index]) }
+                        )
+                    }
+                )
             }
         }
 
@@ -123,6 +132,31 @@ fun EightStep(
             Text(text = "Save my data")
         }
     }
+}
 
+@Composable
+fun PhotoItem(
+    uri: Uri,
+    onDelete: () -> Unit
+) {
+    Box() {
+        AsyncImage(
+            model = uri,
+            contentDescription = null,
+            modifier = Modifier.size(120.dp),
+            contentScale = ContentScale.Crop
+        )
+        IconButton(
+            onClick = onDelete,
+            modifier = Modifier.align(Alignment.TopEnd)
+        ) {
+            Icon(
+                imageVector = Icons.Filled.Delete,
+                contentDescription = "Delete Photo",
+                tint = Color(0xFF860000)
+            )
+        }
+    }
 
 }
+
