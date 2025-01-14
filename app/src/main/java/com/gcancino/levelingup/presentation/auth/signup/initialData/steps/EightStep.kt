@@ -116,24 +116,6 @@ fun EightStep(
                     }
                 )
             }
-            /*LazyHorizontalGrid(
-                state = gridState,
-                rows = GridCells.Fixed(3),
-                modifier = Modifier.padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                items(
-                    count = photos.size,
-                    key = { index -> photos[index] },
-                    contentType = { index -> photos[index] },
-                    itemContent = { index ->
-                        PhotoItem(
-                            uri = photos[index],
-                            onDelete = { viewModel.removePhoto(photos[index]) }
-                        )
-                    }
-                )
-            }*/
         }
 
         Button(
