@@ -94,6 +94,7 @@ fun Navigation(
                     viewModel = appContainer.signInViewModel,
                     navController = navController,
                     snackBarHostState = snackbarHostState,
+                    onNavigateToSignUp = { navController.navigate("signUp") }
                 )
             }
             composable("signUp") {

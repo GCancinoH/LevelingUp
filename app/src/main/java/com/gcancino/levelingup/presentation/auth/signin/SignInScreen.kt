@@ -53,7 +53,8 @@ import kotlinx.coroutines.launch
 fun SignInScreen(
     viewModel: SignInViewModel,
     navController: NavHostController,
-    snackBarHostState: SnackbarHostState
+    snackBarHostState: SnackbarHostState,
+    onNavigateToSignUp: () -> Unit
 ) {
     val authState by viewModel.authState.collectAsState()
     val scope = rememberCoroutineScope()
@@ -226,16 +227,18 @@ fun SignInScreen(
 
         // Account Creation
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth()
+                .padding(8.dp),
             horizontalArrangement = Arrangement.Center,
         ) {
             Text(text = "Don't have an account?")
             TextButton(onClick = {
-                navController.navigate("dashboard") {
+                /*navController.navigate("dashboard") {
                     popUpTo("initScreen") {
                         inclusive = true
                     }
-                }
+                }*/
+                onNavigateToSignUp()
             }) {
                 Text(text = "Sign Up")
             }

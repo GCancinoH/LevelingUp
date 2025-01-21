@@ -9,3 +9,8 @@ enum class Improvement {
     HABITS,
     MENTAL_TOUGHNESS
 }
+
+enum class Genders {
+    FEMALE,
+    MALE
+}

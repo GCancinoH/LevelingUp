@@ -7,9 +7,12 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.storage.FirebaseStorage
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.tasks.await
 import java.util.Date
 import java.util.UUID
@@ -42,34 +45,45 @@ class ImprovementRepository {
         }
     }
 
-    fun saveInitialData(patientData: Map<String, Any>, photoList: List<Uri>): Flow<Resource<Unit>> = flow {
+    fun saveInitialData(patientData: Map<String, Any?>, photoList: List<Uri>): Flow<Resource<Unit>> = flow {
         emit(Resource.Loading())
-        try {
+        /*try {
             val currentDate = Date()
-            val patientID = auth.currentUser?.uid
-            val photoUrls = mutableListOf<String>()
+            val patientID =
+                auth.currentUser?.uid ?: throw IllegalStateException("User not authenticated")
 
-            // Upload photos to Firebase Storage
-            for (photo in photoList) {
-                val fileName = "${UUID.randomUUID()}.jpg}"
-                val photoRef = storage.reference.child("patient_photos/$patientID/initialPhotos/$fileName")
-                photoRef.putFile(photo).await()
-                val downloadTask = photoRef.downloadUrl.await().toString()
-                photoUrls.add(downloadTask)
+            coroutineScope {
+                val photoUrls = photoList.map { uri ->
+                    async(Dispatchers.IO) {
+                        val fileName = "${UUID.randomUUID()}.jpg}"
+                        val photoRef =
+                            storage.reference.child("patient_photos/$patientID/initialPhotos/$fileName")
+                        photoRef.putFile(uri).await()
+                        photoRef.downloadUrl.await().toString()
+                    }
+                }.awaitAll()
+
+                val updatedData = patientData.toMutableMap().apply {
+                    (get("initialData") as? MutableMap<*, *>)?.also { initialData ->
+                        @Suppress("UNCHECKED_CAST")
+                        (initialData as? MutableMap<String, Any>)?.let { safeInitialData ->
+                            safeInitialData["photos"] = photoUrls
+                            safeInitialData["date"] = currentDate
+                        }
+                    }
+                }
+
+                try {
+                    db.collection("patients").document(patientID)
+                        .update(updatedData)
+                        .await()
+                    emit(Resource.Success(Unit))
+                } catch (e: Exception) {
+                    emit(Resource.Error("Error saving the data: ${e.message}"))
+                }
             }
-
-            val initialData = patientData["initialData"] as? Map<*, *>
-            val mutableInitialData = initialData?.toMutableMap()
-            mutableInitialData?.put("photos", photoUrls)
-            mutableInitialData?.put("date", currentDate)
-
-            db.collection("patients").document(patientID?: "")
-                .update(patientData)
-                .addOnSuccessListener { emit(Resource.Success(Unit)) }
-                .addOnFailureListener { emit(Resource.Error("Error saving the data: ${it.message}")) })
-
-
-        } catch (e: FirebaseFirestoreException) {
-        }
+        } catch (e: Exception) {
+            emit(Resource.Error("Error processing data: ${e.message}"))
+        }*/
     }
 }

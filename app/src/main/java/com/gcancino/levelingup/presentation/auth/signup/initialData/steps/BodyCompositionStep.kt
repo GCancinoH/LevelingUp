@@ -27,28 +27,57 @@ import androidx.compose.ui.unit.dp
 import com.gcancino.levelingup.presentation.auth.signup.initialData.InitialDataViewModel
 
 @Composable
-fun SixStep(viewModel: InitialDataViewModel) {
+fun BodyCompositionStep(
+    viewModel: InitialDataViewModel
+) {
     Box(
         modifier = Modifier.fillMaxSize()
             .padding(16.dp)
     ) {
         Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            horizontalAlignment = Alignment.Start,
+            verticalArrangement = Arrangement.Top
         ) {
             Text(
-                text = "What's your muscle mass percentage?",
+                text = "Body Composition",
                 style = MaterialTheme.typography.headlineMedium
             )
+            Spacer(modifier = Modifier.height(10.dp))
+            Text(
+                text = "Body composition metrics help trac fitness progress and set realistic goals. " +
+                        "Also, other health metrics can be calculated with your muscle mass, body fat " +
+                        "& visceral fat.",
+                style = MaterialTheme.typography.bodySmall
+            )
             Spacer(modifier = Modifier.height(16.dp))
-            // Weight TextField
+            // Body Fat TextField
+            OutlinedTextField(
+                value = viewModel.fatPercentage,
+                onValueChange = { viewModel.onFatPercentageChange(it) },
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.MonitorWeight,
+                        contentDescription = "Body Fat"
+                    )
+                },
+                label = { Text("Body Fat %") },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true,
+                maxLines = 1,
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Decimal,
+                    imeAction = ImeAction.Next
+                )
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            // Muscle Mass TextField
             OutlinedTextField(
                 value = viewModel.musclePercentage,
                 onValueChange = { viewModel.onMusclePercentageChange(it) },
                 leadingIcon = {
                     Icon(
                         imageVector = Icons.Default.MonitorWeight,
-                        contentDescription = "Name"
+                        contentDescription = "Muscle Mass"
                     )
                 },
                 label = { Text("Muscle Mass %") },
@@ -57,9 +86,29 @@ fun SixStep(viewModel: InitialDataViewModel) {
                 maxLines = 1,
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Decimal,
+                    imeAction = ImeAction.Next
+                )
+            )
+            // Visceral Fat TextField
+            OutlinedTextField(
+                value = viewModel.visceralFat,
+                onValueChange = { viewModel.onVisceralFatChange(it) },
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.MonitorWeight,
+                        contentDescription = "Visceral Fat"
+                    )
+                },
+                label = { Text("Visceral Fat") },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true,
+                maxLines = 1,
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Decimal,
                     imeAction = ImeAction.Done
                 )
             )
+
         }
 
         Button(
@@ -74,4 +123,5 @@ fun SixStep(viewModel: InitialDataViewModel) {
             Text(text = "Next")
         }
     }
+
 }

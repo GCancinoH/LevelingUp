@@ -15,12 +15,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Camera
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -36,6 +36,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
+import com.gcancino.levelingup.domain.entities.Resource
 import com.gcancino.levelingup.presentation.auth.signup.initialData.InitialDataViewModel
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
@@ -46,7 +47,6 @@ import com.google.accompanist.permissions.rememberPermissionState
 @Composable
 fun EightStep(
     viewModel: InitialDataViewModel,
-    context: Context
 ) {
     val cameraPermissionState = rememberPermissionState(android.Manifest.permission.CAMERA)
     val storagePermissionState = rememberMultiplePermissionsState(
@@ -56,7 +56,7 @@ fun EightStep(
         )
     )
     val photos by viewModel.photos.collectAsState()
-    val gridState = rememberLazyGridState()
+    val state by viewModel.saveState.collectAsState()
 
     val galleryLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetMultipleContents()
@@ -119,7 +119,7 @@ fun EightStep(
         }
 
         Button(
-            onClick = { viewModel.nextStep() },
+            onClick = { viewModel.saveInitialData() },
             modifier = Modifier.fillMaxWidth()
                 .align(Alignment.BottomEnd),
             colors = ButtonDefaults.buttonColors(
@@ -127,7 +127,15 @@ fun EightStep(
                 contentColor = Color.Black
             )
         ) {
-            Text(text = "Save my data")
+            when(state) {
+                is Resource.Loading -> {
+                    CircularProgressIndicator(
+                        color = Color.Black,
+                        modifier = Modifier.size(24.dp)
+                    )
+                }
+                else -> Text("Save my data")
+            }
         }
     }
 }

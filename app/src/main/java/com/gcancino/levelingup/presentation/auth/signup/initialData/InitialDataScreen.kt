@@ -28,16 +28,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import com.gcancino.levelingup.presentation.auth.signup.initialData.steps.EightStep
-import com.gcancino.levelingup.presentation.auth.signup.initialData.steps.FirstStep
-import com.gcancino.levelingup.presentation.auth.signup.initialData.steps.FourthStep
-import com.gcancino.levelingup.presentation.auth.signup.initialData.steps.SecondStep
-import com.gcancino.levelingup.presentation.auth.signup.initialData.steps.ThirdStep
-import com.gcancino.levelingup.presentation.auth.signup.initialData.steps.FifthStep
-import com.gcancino.levelingup.presentation.auth.signup.initialData.steps.SixStep
-import com.gcancino.levelingup.presentation.auth.signup.initialData.steps.SeventhStep
+import com.gcancino.levelingup.presentation.auth.signup.initialData.steps.BodyCompositionStep
+import com.gcancino.levelingup.presentation.auth.signup.initialData.steps.ImprovementStep
+import com.gcancino.levelingup.presentation.auth.signup.initialData.steps.ObjectivesStep
+import com.gcancino.levelingup.presentation.auth.signup.initialData.steps.PersonalInfoStep
+import com.gcancino.levelingup.presentation.auth.signup.initialData.steps.PhysicalAttributesStep
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 
 @OptIn(ExperimentalAnimationApi::class, ExperimentalMaterial3Api::class,
@@ -88,14 +84,11 @@ fun InitialDataScreen(
                 }, label = ""
             ) { targetStep ->
                 when (targetStep) {
-                    0 -> FirstStep(viewModel)
-                    1 -> SecondStep(viewModel)
-                    2 -> ThirdStep(viewModel)
-                    3 -> FourthStep(viewModel)
-                    4 -> FifthStep(viewModel)
-                    5 -> SixStep(viewModel)
-                    6 -> SeventhStep(viewModel)
-                    7 -> EightStep(viewModel, context)
+                    0 -> PersonalInfoStep(viewModel)
+                    1 -> PhysicalAttributesStep(viewModel)
+                    2 -> BodyCompositionStep(viewModel)
+                    3 -> ObjectivesStep(viewModel)
+                    4 -> ImprovementStep(viewModel)
                 }
             }
         }

@@ -1,34 +1,38 @@
 package com.gcancino.levelingup.presentation.auth.signup.initialData
 
 import android.net.Uri
+import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.gcancino.levelingup.data.models.Patient
+import com.gcancino.levelingup.data.models.patient.Improvement
+import com.gcancino.levelingup.data.repositories.improvement.ImprovementRepository
+import com.gcancino.levelingup.domain.entities.Resource
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
 import java.util.Calendar
 import java.util.Date
-import java.util.UUID
+import java.util.Locale
 
 class InitialDataViewModel(
-
 ) : ViewModel() {
     private val auth = FirebaseAuth.getInstance()
     private val storage = FirebaseStorage.getInstance()
+    private val repository = ImprovementRepository()
 
+    var name by mutableStateOf("")
     var weight by mutableStateOf("")
     var height by mutableStateOf("")
-    var bmi by mutableDoubleStateOf(0.0)
+    var bmi by mutableStateOf("")
     var birthdate by mutableStateOf<Date?>(null)
     var age by mutableIntStateOf(0)
     var visceralFat by mutableStateOf("")
@@ -36,7 +40,7 @@ class InitialDataViewModel(
     var musclePercentage by mutableStateOf("")
     var progress by mutableFloatStateOf(0.125f)
     val progressIncrement = 0.125f
-
+    var bmiInterpretation by mutableStateOf("")
     var currentStep by mutableIntStateOf(0)
 
     private val _objectives = listOf(
@@ -60,8 +64,11 @@ class InitialDataViewModel(
     private val _photos = MutableStateFlow<List<Uri>>(emptyList())
     val photos: StateFlow<List<Uri>> = _photos
 
-    private val _tmpPhoto = MutableStateFlow<Uri?>(null)
-    val tmpPhoto: StateFlow<Uri?> = _tmpPhoto
+    private val _selectedImprovements = mutableStateListOf<Improvement>()
+    val selectedImprovements: List<Improvement> = _selectedImprovements
+
+    private val _saveState = MutableStateFlow<Resource<Unit>?>(null)
+    val saveState: StateFlow<Resource<Unit>?> = _saveState.asStateFlow()
 
     fun selectObjective(option: String) {
         _selectedObjective.value = option
@@ -102,6 +109,7 @@ class InitialDataViewModel(
 
     fun onHeightChange(newHeight: String) {
         height = newHeight
+        calculateBMI()
     }
 
     fun onBirthdateChange(newBirthdate: Date) {
@@ -116,14 +124,32 @@ class InitialDataViewModel(
         fatPercentage = newFatPercentage
     }
 
+    fun onNameChange(newName: String) { name = newName }
+
     fun onMusclePercentageChange(newMusclePercentage: String) {
         musclePercentage = newMusclePercentage
     }
 
-    private fun calculateBMI(): Double {
-        val weightValue = weight.toDoubleOrNull() ?: return 0.0
-        val heightValue = height.toDoubleOrNull() ?: return 0.0
-        return (weightValue / (heightValue * heightValue))
+    fun toggleImprovement(improvement: Improvement) {
+        if (_selectedImprovements.contains(improvement)) {
+            _selectedImprovements.remove(improvement)
+        } else {
+            _selectedImprovements.add(improvement)
+        }
+    }
+
+    private fun calculateBMI() {
+        val weightValue = weight.toDoubleOrNull()
+        val heightValue = height.toDoubleOrNull()
+
+        if (weightValue != null && heightValue != null) {
+            val bmiValue = (weightValue / (heightValue * heightValue))
+            bmi = String.format(Locale.getDefault(), "%.1f", bmiValue)
+            bmiInterpretation = interpretBMI(bmiValue)
+        } else {
+            bmi = ""
+            bmiInterpretation = ""
+        }
     }
 
     private fun calculateAge(birthdate: Date?): Int {
@@ -136,23 +162,22 @@ class InitialDataViewModel(
         return (currentDateCalendar.get(Calendar.YEAR) - birthdateCalendar.get(Calendar.YEAR))
     }
 
+    fun interpretBMI(bmi: Double): String {
+        return when {
+            bmi < 18.5 -> "Underweight"
+            bmi < 25 -> "Normal weight"
+            bmi < 30 -> "Overweight"
+            else -> "Obese"
+        }
+    }
+
     fun saveInitialData() {
         viewModelScope.launch {
             val patientID = auth.currentUser?.uid
             val currentDate = Date()
 
-            bmi = calculateBMI()
+            bmi = calculateBMI().toString()
             age = calculateAge(birthdate)
-
-            // Upload photos to Firebase Storage
-            val photoUrls = mutableListOf<String>()
-            for (photo in photos.value) {
-                val fileName = "${UUID.randomUUID()}.jpg}"
-                val photoRef = storage.reference.child("patient_photos/$patientID/initialPhotos/$fileName")
-                photoRef.putFile(photo).await()
-                val downloadTask = photoRef.downloadUrl.await().toString()
-                photoUrls.add(downloadTask)
-            }
 
             // create initial data map
             val initialData = mapOf(
@@ -161,7 +186,7 @@ class InitialDataViewModel(
                 "visceralFat" to visceralFat,
                 "fatPercentage" to fatPercentage,
                 "musclePercentage" to musclePercentage,
-                "photos" to photoUrls,
+                "photos" to null,
                 "date" to currentDate
             )
 
@@ -172,10 +197,13 @@ class InitialDataViewModel(
                 "objectives" to selectedObjective.value,
                 "initialData" to initialData
             )
+            Log.d("InitialDataViewModel", "Patient Data: $patientData")
+
+            repository.saveInitialData(patientData, photos.value).collect { resource ->
+                _saveState.value = resource
+                Log.d("InitialDataViewModel", "Resource: $resource")
+            }
+
         }
     }
-
-
-
-
 }

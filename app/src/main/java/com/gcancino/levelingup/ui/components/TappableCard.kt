@@ -23,7 +23,8 @@ import androidx.compose.ui.unit.dp
 fun TappableCard(
     text: String,
     isSelected: Boolean,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val gradientColors = listOf(Color(0xFF0f2027), Color(0xFF203A43), Color(0xFF2C5364))
     val cardSelectedBorder =
@@ -33,7 +34,7 @@ fun TappableCard(
     val checkboxIcon = if (isSelected) Icons.Filled.CheckBox else Icons.Filled.CheckBoxOutlineBlank
 
     OutlinedCard(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         onClick = onClick,
         border = cardSelectedBorder,
         colors = CardDefaults.cardColors(
@@ -42,7 +43,7 @@ fun TappableCard(
         )
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth()
+            modifier = modifier.fillMaxWidth()
                 .padding(16.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
