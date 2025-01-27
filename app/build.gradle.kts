@@ -74,6 +74,7 @@ dependencies {
     implementation(libs.google.firebase.auth)
     implementation(libs.google.firebase.firestore)
     implementation(libs.google.firebase.storage)
+    implementation(libs.google.firebase.messaging)
 
     // Coroutines
     implementation(libs.kotlin.coroutines)
@@ -100,7 +101,7 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.retrofit.converter)
     implementation(libs.coil.image)
-    //implementation("com.onesignal:OneSignal:[5.0.0, 5.99.99]")
+    implementation("com.onesignal:OneSignal:[5.0.0, 5.99.99]")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

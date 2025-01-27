@@ -1,5 +1,5 @@
 [versions]
-agp = "8.7.3"
+agp = "8.8.0"
 kotlin = "2.0.0"
 coreKtx = "1.15.0"
 junit = "4.13.2"
@@ -73,10 +73,11 @@ google-firebaseBom = { module = "com.google.firebase:firebase-bom", version.ref 
 google-firebase-auth = { module = "com.google.firebase:firebase-auth-ktx" }
 google-firebase-firestore = { module = "com.google.firebase:firebase-firestore-ktx" }
 google-firebase-storage = { module = "com.google.firebase:firebase-storage-ktx" }
+google-firebase-messaging = { module = "com.google.firebase:firebase-messaging" }
 
 # Camera
 camerax-core = { module = "androidx.camera:camera-core", version.ref = "camera" }
-camerax-compose = { module = "androidx.camera:camera-compose", version.ref = "camera" }
+
 camerax-lifecycle = { module = "androidx.camera:camera-lifecycle", version.ref = "camera" }
 camera-view = { module = "androidx.camera:camera-view", version.ref = "camera"}
 

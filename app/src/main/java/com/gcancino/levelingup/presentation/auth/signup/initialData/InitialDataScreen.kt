@@ -33,6 +33,7 @@ import com.gcancino.levelingup.presentation.auth.signup.initialData.steps.BodyCo
 import com.gcancino.levelingup.presentation.auth.signup.initialData.steps.ImprovementStep
 import com.gcancino.levelingup.presentation.auth.signup.initialData.steps.ObjectivesStep
 import com.gcancino.levelingup.presentation.auth.signup.initialData.steps.PersonalInfoStep
+import com.gcancino.levelingup.presentation.auth.signup.initialData.steps.PhotosStep
 import com.gcancino.levelingup.presentation.auth.signup.initialData.steps.PhysicalAttributesStep
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 
@@ -67,7 +68,7 @@ fun InitialDataScreen(
 
                 )
         }
-        Spacer(modifier = Modifier.height(32.dp))
+        Spacer(modifier = Modifier.height(8.dp))
         Box(modifier = Modifier.fillMaxSize()) {
             AnimatedContent(
                 targetState = viewModel.currentStep,
@@ -89,6 +90,7 @@ fun InitialDataScreen(
                     2 -> BodyCompositionStep(viewModel)
                     3 -> ObjectivesStep(viewModel)
                     4 -> ImprovementStep(viewModel)
+                    5 -> PhotosStep(viewModel)
                 }
             }
         }

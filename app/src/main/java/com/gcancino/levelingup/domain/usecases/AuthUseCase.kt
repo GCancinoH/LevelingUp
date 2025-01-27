@@ -13,8 +13,8 @@ class AuthUseCase(
     fun signInWithGoogle() =
         repository.signInWithGoogle()
 
-    fun signUpWithEmail(name: String, email: String, password: String) =
-        repository.signUpWithEmail(name, email, password)
+    fun signUpWithEmail(email: String, password: String) =
+        repository.signUpWithEmail(email, password)
 
     fun signUpWithGoogle() =
         repository.signInWithGoogle()

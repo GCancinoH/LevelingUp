@@ -39,7 +39,7 @@ class InitialDataViewModel(
     var fatPercentage by mutableStateOf("")
     var musclePercentage by mutableStateOf("")
     var progress by mutableFloatStateOf(0.125f)
-    val progressIncrement = 0.125f
+    val progressIncrement = 0.2f
     var bmiInterpretation by mutableStateOf("")
     var currentStep by mutableIntStateOf(0)
 

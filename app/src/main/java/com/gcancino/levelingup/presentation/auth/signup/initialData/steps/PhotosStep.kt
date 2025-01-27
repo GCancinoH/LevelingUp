@@ -1,6 +1,5 @@
 package com.gcancino.levelingup.presentation.auth.signup.initialData.steps
 
-import android.content.Context
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -12,8 +11,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Camera
@@ -21,7 +20,6 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -38,15 +36,15 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.gcancino.levelingup.domain.entities.Resource
 import com.gcancino.levelingup.presentation.auth.signup.initialData.InitialDataViewModel
+import com.gcancino.levelingup.ui.components.PhotoItem
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.google.accompanist.permissions.rememberPermissionState
 
-@ExperimentalMaterial3Api
-@ExperimentalPermissionsApi
-@Composable
-fun EightStep(
-    viewModel: InitialDataViewModel,
+@OptIn(ExperimentalPermissionsApi::class)
+@Composable()
+fun PhotosStep(
+    viewModel: InitialDataViewModel
 ) {
     val cameraPermissionState = rememberPermissionState(android.Manifest.permission.CAMERA)
     val storagePermissionState = rememberMultiplePermissionsState(
@@ -74,12 +72,18 @@ fun EightStep(
             .padding(16.dp)
     ) {
         Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            horizontalAlignment = Alignment.Start,
+            modifier = Modifier.fillMaxSize()
         ) {
             Text(
-                text = "Now, let's add some photos to see your progress over time",
+                text = "Starting Point",
                 style = MaterialTheme.typography.headlineMedium
+            )
+            Spacer(modifier = Modifier.height(10.dp))
+            Text(
+                text = "Select three photos to mar the beginning of your journey. These images will serve" +
+                        " as reference to track your progress over time and celebrate your achievements.",
+                style = MaterialTheme.typography.bodySmall
             )
             Spacer(modifier = Modifier.height(16.dp))
             Button(
@@ -109,7 +113,7 @@ fun EightStep(
                     count = photos.size,
                     key = { index -> photos[index] },
                     itemContent = { index ->
-                        PhotoItemm(
+                        PhotoItem(
                             uri = photos[index],
                             onDelete = { viewModel.removePhoto(photos[index]) }
                         )
@@ -136,31 +140,6 @@ fun EightStep(
                 }
                 else -> Text("Save my data")
             }
-        }
-    }
-}
-
-@Composable
-fun PhotoItemm(
-    uri: Uri,
-    onDelete: () -> Unit
-) {
-    Box() {
-        AsyncImage(
-            model = uri,
-            contentDescription = null,
-            modifier = Modifier.size(120.dp),
-            contentScale = ContentScale.Crop
-        )
-        IconButton(
-            onClick = onDelete,
-            modifier = Modifier.align(Alignment.TopEnd)
-        ) {
-            Icon(
-                imageVector = Icons.Filled.Delete,
-                contentDescription = "Delete Photo",
-                tint = Color(0xFF860000)
-            )
         }
     }
 }

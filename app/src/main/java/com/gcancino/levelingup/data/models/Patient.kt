@@ -10,7 +10,7 @@ import java.util.Date
 
 data class Patient(
     val uid: String,
-    val displayName: String,
+    val displayName: String? = "",
     val email: String,
     val isEmailVerified: Boolean? = false,
     val photoUrl: String? = "",

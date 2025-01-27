@@ -132,35 +132,6 @@ fun SignUpScreen(
             )
         }
         Spacer(modifier = Modifier.height(8.dp))
-
-        // Name TextField
-        OutlinedTextField(
-            value = viewModel.name,
-            onValueChange = { viewModel.onNameChange(it) },
-            leadingIcon = {
-                Icon(
-                    imageVector = Icons.Filled.Person,
-                    contentDescription = "Name"
-                )
-            },
-            label = { Text("Full Name") },
-            modifier = Modifier.fillMaxWidth(),
-            singleLine = true,
-            maxLines = 1,
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Text,
-                imeAction = ImeAction.Next
-            ),
-            isError = viewModel.nameError != null,
-            supportingText = {
-                if (viewModel.nameError != null) {
-                    Text(text = viewModel.nameError!!,
-                        color = MaterialTheme.colorScheme.error)
-                }
-            }
-        )
-        Spacer(modifier = Modifier.height(10.dp))
-
         // Email TextField
         OutlinedTextField(
             value = viewModel.email,
@@ -254,6 +225,9 @@ fun SignUpScreen(
                         color = Color.White,
                         modifier = Modifier.size(24.dp)
                     )
+                }
+                is Resource.Success -> {
+                    Text("Welcome, Player!")
                 }
                 else -> Text("Sign Up")
             }

@@ -3,17 +3,22 @@ package com.gcancino.levelingup.presentation.auth.signup.initialData.steps
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.gcancino.levelingup.data.models.patient.Improvement
 import com.gcancino.levelingup.presentation.auth.signup.initialData.InitialDataViewModel
@@ -31,7 +36,8 @@ fun ImprovementStep(
     ) {
         Column(
             horizontalAlignment = Alignment.Start,
-            verticalArrangement = Arrangement.Top
+            verticalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier.fillMaxSize()
         ) {
             Text(
                 text = "Improvements",
@@ -46,27 +52,45 @@ fun ImprovementStep(
             )
             Spacer(modifier = Modifier.height(16.dp))
             LazyVerticalGrid(
-                columns = GridCells.Fixed(1)
+                columns = GridCells.Fixed(1),
+                contentPadding = PaddingValues(8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier.weight(1f)
             ) {
-                items(improvements.size) { improvement ->
-                    TappableCard(
-                        text = when (improvement.name) {
-                            "STRENGTH" -> "Strength"
-                            "ENDURANCE" -> "Endurance"
-                            "MOBILITY" -> "Mobility"
-                            "SELF_DEVELOPMENT" -> "Self-Development"
-                            "NUTRITION" -> "Nutrition"
-                            "HABITS" -> "Habit Formation"
-                            "MENTAL_TOUGHNESS" -> "Mental Toughness"
-                            else -> null
-                        }.toString(),
-                        isSelected = viewModel.selectedImprovements.contains(improvement),
-                        onClick = { viewModel.toggleImprovement(improvement) }
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
-                }
+                items(
+                    count = improvements.size,
+                    itemContent = { index ->
+                        val improvement = improvements[index]
+                        TappableCard(
+                            text = when (improvement) {
+                                Improvement.STRENGTH -> "Strength"
+                                Improvement.ENDURANCE -> "Endurance"
+                                Improvement.MOBILITY -> "Mobility"
+                                Improvement.SELF_DEVELOPMENT -> "Self-Development"
+                                Improvement.NUTRITION -> "Nutrition"
+                                Improvement.HABITS -> "Habit Formation"
+                                Improvement.MENTAL_TOUGHNESS -> "Mental Toughness"
+                                else -> null
+                            }.toString(),
+                            isSelected = viewModel.selectedImprovements.contains(improvement),
+                            onClick = { viewModel.toggleImprovement(improvement) }
+                        )
+                        Spacer(modifier = Modifier.height(16.dp))
+                    }
+                )
             }
-
+        }
+        Spacer(modifier = Modifier.height(16.dp))
+        Button(
+            onClick = { viewModel.nextStep() },
+            modifier = Modifier.fillMaxWidth()
+                .align(Alignment.BottomEnd),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color.White,
+                contentColor = Color.Black
+            )
+        ) {
+            Text(text = "Next")
         }
     }
 }

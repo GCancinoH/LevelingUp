@@ -89,6 +89,7 @@ fun BodyCompositionStep(
                     imeAction = ImeAction.Next
                 )
             )
+            Spacer(modifier = Modifier.height(8.dp))
             // Visceral Fat TextField
             OutlinedTextField(
                 value = viewModel.visceralFat,

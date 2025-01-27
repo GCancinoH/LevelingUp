@@ -67,7 +67,7 @@ fun Navigation(
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = "initialData",
+            startDestination = "initScreen",
             modifier = Modifier.padding(innerPadding)
         ) {
             composable("initScreen") {
@@ -101,7 +101,13 @@ fun Navigation(
                 SignUpScreen(
                     viewModel = appContainer.signUpViewModel,
                     snackBarHostState = snackbarHostState,
-                    onSignUpSuccess = { navController.navigate("improvementScreen") },
+                    onSignUpSuccess = {
+                        navController.navigate("initialData") {
+                            popUpTo("initScreen") {
+                                inclusive = true
+                            }
+                        }
+                    },
                     onSignInBtnClick = { navController.navigate("signIn") }
                 )
             }

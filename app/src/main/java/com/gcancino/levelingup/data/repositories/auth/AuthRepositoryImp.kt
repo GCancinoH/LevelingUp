@@ -71,7 +71,7 @@ class AuthRepositoryImp() {
         /* TODO() */
     }
 
-    fun signUpWithEmail(name: String, email: String, password: String) : Flow<Resource<Patient>> = flow {
+    fun signUpWithEmail(email: String, password: String) : Flow<Resource<Patient>> = flow {
         emit(Resource.Loading())
         try {
             val result = auth.createUserWithEmailAndPassword(email, password).await()
@@ -83,7 +83,6 @@ class AuthRepositoryImp() {
                         val recentPatient = Patient(
                             uid = it.uid,
                             email = it.email ?: "",
-                            displayName = name,
                             progress = Progress(
                                 level = 1,
                                 exp = 0,

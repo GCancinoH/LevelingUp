@@ -38,14 +38,7 @@ class SignUpViewModel(
     private val _authState = MutableStateFlow<Resource<Patient>?>(null)
     var authState: StateFlow<Resource<Patient>?> = _authState.asStateFlow()
 
-    val nameRegex = Regex("^[a-zA-Z ]+$")
     val emailRegex = android.util.Patterns.EMAIL_ADDRESS
-
-    fun onNameChange(newName: String) {
-        name = newName.trim()
-        nameError = null
-        validateName()
-    }
 
     fun onEmailChange(newEmail: String) {
         email = newEmail.trim()
@@ -66,16 +59,17 @@ class SignUpViewModel(
     fun signUp() {
         _authState.value = null
         // Check the form is valid
-        if (!isValidName() || !isValidEmail() || !isValidPassword()) {
+        if (!isValidEmail() || !isValidPassword()) {
             _authState.value = Resource.Error("Form is not valid")
             return
         }
 
         viewModelScope.launch {
             try {
-                authUseCase.signUpWithEmail(name, email, password).collect { resource ->
+                authUseCase.signUpWithEmail(email, password).collect { resource ->
                     Log.d("SignUpViewModel", "Resource: $resource")
                     _authState.value = resource
+                    Log.d("SignUpViewModel", _authState.value.toString())
                 }
             } catch (e: Exception) {
                 _authState.value = Resource.Error(e.localizedMessage ?: "Sign un failed")
@@ -85,15 +79,6 @@ class SignUpViewModel(
     }
 
     fun signUpWithGoogle() {
-    }
-
-    private fun validateName() {
-        //name.isNotBlank() && nameRegex.matches(name)
-        nameError = when {
-            name.isBlank() -> "Name cannot be blank"
-            !nameRegex.matches(name) -> "Name can only contain letters and spaces"
-            else -> null
-        }
     }
 
     private fun validateEmail() {
@@ -115,6 +100,4 @@ class SignUpViewModel(
 
     private fun isValidEmail(): Boolean { return emailRegex.matcher(email).matches() && (email.isNotBlank() || email.isEmpty()) }
     private fun isValidPassword(): Boolean { return password.length >= 6 && (password.isNotBlank() || password.isEmpty()) }
-    private fun isValidName(): Boolean { return name.isNotBlank() && nameRegex.matches(name) }
-
 }
