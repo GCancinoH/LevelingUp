@@ -38,7 +38,7 @@ class InitialDataViewModel(
     var visceralFat by mutableStateOf("")
     var fatPercentage by mutableStateOf("")
     var musclePercentage by mutableStateOf("")
-    var progress by mutableFloatStateOf(0.125f)
+    var progress by mutableFloatStateOf(0.2f)
     val progressIncrement = 0.2f
     var bmiInterpretation by mutableStateOf("")
     var currentStep by mutableIntStateOf(0)
@@ -173,31 +173,30 @@ class InitialDataViewModel(
 
     fun saveInitialData() {
         viewModelScope.launch {
-            val patientID = auth.currentUser?.uid
             val currentDate = Date()
-
-            bmi = calculateBMI().toString()
             age = calculateAge(birthdate)
 
             // create initial data map
             val initialData = mapOf(
-                "weight" to weight,
-                "bmi" to bmi,
-                "visceralFat" to visceralFat,
-                "fatPercentage" to fatPercentage,
+                "weight" to weight.toDoubleOrNull(),
+                "bmi" to bmi.toDoubleOrNull(),
+                "visceralFat" to visceralFat.toDoubleOrNull(),
+                "fatPercentage" to fatPercentage.toDoubleOrNull(),
                 "musclePercentage" to musclePercentage,
                 "photos" to null,
                 "date" to currentDate
             )
 
             val patientData = mapOf(
-                "height" to height,
+                "height" to height.toDoubleOrNull(),
                 "age" to age,
                 "gender" to selectedGender.value,
                 "objectives" to selectedObjective.value,
-                "initialData" to initialData
+                "birthday" to birthdate,
+                "improvements" to selectedImprovements,
+                "initialData" to initialData,
+                "displayName" to name,
             )
-            Log.d("InitialDataViewModel", "Patient Data: $patientData")
 
             repository.saveInitialData(patientData, photos.value).collect { resource ->
                 _saveState.value = resource

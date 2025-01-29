@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
+import androidx.navigation.NavHostController
 import com.gcancino.levelingup.presentation.auth.signup.initialData.steps.BodyCompositionStep
 import com.gcancino.levelingup.presentation.auth.signup.initialData.steps.ImprovementStep
 import com.gcancino.levelingup.presentation.auth.signup.initialData.steps.ObjectivesStep
@@ -43,7 +44,7 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 @Composable
 fun InitialDataScreen(
     viewModel: InitialDataViewModel,
-    context: Context
+    navController: NavHostController
 ) {
     val animatedProgress by animateFloatAsState(
         targetValue = viewModel.progress,
@@ -90,7 +91,7 @@ fun InitialDataScreen(
                     2 -> BodyCompositionStep(viewModel)
                     3 -> ObjectivesStep(viewModel)
                     4 -> ImprovementStep(viewModel)
-                    5 -> PhotosStep(viewModel)
+                    5 -> PhotosStep(viewModel, navController)
                 }
             }
         }

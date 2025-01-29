@@ -33,6 +33,8 @@ import com.gcancino.levelingup.presentation.auth.signup.initialData.InitialDataV
 fun PhysicalAttributesStep(
     viewModel: InitialDataViewModel
 ) {
+    val bmiInterpretationString: String = viewModel.bmiInterpretation
+
     Box(
         modifier = Modifier.fillMaxSize()
             .padding(16.dp)
@@ -107,7 +109,8 @@ fun PhysicalAttributesStep(
                 readOnly = true,
                 enabled = false,
                 supportingText = {
-                    val bmiString = "BMI Interpretation: $viewModel.bmiInterpretation"
+
+                    val bmiString = "BMI Interpretation: $bmiInterpretationString"
                     if (viewModel.bmi.isNotEmpty()) Text(text = bmiString)
                 }
             )

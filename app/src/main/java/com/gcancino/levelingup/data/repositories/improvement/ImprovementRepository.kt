@@ -47,7 +47,7 @@ class ImprovementRepository {
 
     fun saveInitialData(patientData: Map<String, Any?>, photoList: List<Uri>): Flow<Resource<Unit>> = flow {
         emit(Resource.Loading())
-        /*try {
+        try {
             val currentDate = Date()
             val patientID =
                 auth.currentUser?.uid ?: throw IllegalStateException("User not authenticated")
@@ -84,6 +84,6 @@ class ImprovementRepository {
             }
         } catch (e: Exception) {
             emit(Resource.Error("Error processing data: ${e.message}"))
-        }*/
+        }
     }
 }

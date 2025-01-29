@@ -101,14 +101,7 @@ fun Navigation(
                 SignUpScreen(
                     viewModel = appContainer.signUpViewModel,
                     snackBarHostState = snackbarHostState,
-                    onSignUpSuccess = {
-                        navController.navigate("initialData") {
-                            popUpTo("initScreen") {
-                                inclusive = true
-                            }
-                        }
-                    },
-                    onSignInBtnClick = { navController.navigate("signIn") }
+                    navController = navController
                 )
             }
             composable("improvements") {
@@ -119,7 +112,7 @@ fun Navigation(
             composable("initialData") {
                 InitialDataScreen(
                     viewModel = appContainer.initialDataViewModel,
-                    context = context
+                    navController = navController
                 )
             }
             composable("forgotPassword") {

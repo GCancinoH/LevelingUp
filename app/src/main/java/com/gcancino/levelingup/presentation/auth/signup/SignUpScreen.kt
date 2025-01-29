@@ -51,6 +51,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.gcancino.levelingup.R
 import com.gcancino.levelingup.domain.entities.Resource
 import com.gcancino.levelingup.ui.theme.purpleBlueGradient
@@ -60,8 +61,7 @@ import kotlinx.coroutines.launch
 fun SignUpScreen(
     viewModel: SignUpViewModel,
     snackBarHostState: SnackbarHostState,
-    onSignUpSuccess: () -> Unit,
-    onSignInBtnClick: () -> Unit,
+    navController: NavHostController,
 
 ) {
     val authState by viewModel.authState.collectAsState()
@@ -69,7 +69,13 @@ fun SignUpScreen(
 
     LaunchedEffect(authState) {
         when (val state = authState) {
-            is Resource.Success -> onSignUpSuccess
+            is Resource.Success -> {
+                navController.navigate("initialData") {
+                    popUpTo("initScreen") {
+                        inclusive = true
+                    }
+                }
+            }
             is Resource.Error -> {
                 scope.launch {
                     snackBarHostState.showSnackbar(
@@ -242,7 +248,13 @@ fun SignUpScreen(
             Text(text = "I have already an account.")
             Spacer(modifier = Modifier.width(8.dp))
             TextButton(
-                onClick = { onSignInBtnClick },
+                onClick = {
+                    navController.navigate("signIn") {
+                        popUpTo("initScreen") {
+                            inclusive = true
+                        }
+                    }
+                },
                 contentPadding = PaddingValues(0.dp)
             ) {
                 Text(text = "Sign me In!")

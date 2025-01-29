@@ -33,6 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import coil3.compose.AsyncImage
 import com.gcancino.levelingup.domain.entities.Resource
 import com.gcancino.levelingup.presentation.auth.signup.initialData.InitialDataViewModel
@@ -44,7 +45,8 @@ import com.google.accompanist.permissions.rememberPermissionState
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable()
 fun PhotosStep(
-    viewModel: InitialDataViewModel
+    viewModel: InitialDataViewModel,
+    navController: NavHostController
 ) {
     val cameraPermissionState = rememberPermissionState(android.Manifest.permission.CAMERA)
     val storagePermissionState = rememberMultiplePermissionsState(
@@ -65,6 +67,19 @@ fun PhotosStep(
     LaunchedEffect(Unit) {
         cameraPermissionState.launchPermissionRequest()
         storagePermissionState.launchMultiplePermissionRequest()
+    }
+
+    LaunchedEffect(state) {
+        when(state) {
+            is Resource.Success -> {
+                navController.navigate("dashboard") {
+                    popUpTo("initScreen") {
+                        inclusive = true
+                    }
+                }
+            }
+            else -> {}
+        }
     }
 
     Box(
