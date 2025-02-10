@@ -9,8 +9,8 @@ import java.time.LocalDate
 
 data class DailyQuest(
     val id: String,
-    val type: QuestType? = null,
-    val multipleTypes: List<QuestType>? = listOf<QuestType>(),
+    val qID: String,
+    val types: List<QuestType> = listOf(),
     val title: String,
     val description: String,
     val status: QuestStatus = QuestStatus.NOT_STARTED,
@@ -19,7 +19,7 @@ data class DailyQuest(
     val details: QuestDetails? = null
 )
 
-val dailyQuests = listOf(
+/*val dailyQuests = listOf(
     DailyQuest(
         id = "dailyQuest_001",
         multipleTypes = listOf(QuestType.MENTAL_TOUGHNESS, QuestType.RECOVERY),
@@ -35,7 +35,6 @@ val dailyQuests = listOf(
         details = QuestDetails.RecoverQuest(
             coldBaths = 1
         )
-
     ),
     DailyQuest(
         id = "dailyQues_002",
@@ -71,6 +70,4 @@ val dailyQuests = listOf(
     )
 
 
-)
-
-
+)*/

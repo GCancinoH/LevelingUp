@@ -6,7 +6,7 @@ sealed class QuestDetails {
     ) : QuestDetails()
 
     data class RecoverQuest(
-        val coldBaths: Int? = 0,
+        val coldBaths: String? = null,
         val walkingSteps: Int? = 0,
         val waterLts: Double? = 0.0,
         val sleepHours: Int? = 0

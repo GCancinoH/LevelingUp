@@ -8,6 +8,7 @@ import androidx.room.Query
 import androidx.room.Update
 import com.gcancino.levelingup.domain.database.entities.DailyQuestEntity
 import kotlinx.coroutines.flow.Flow
+import java.time.LocalDate
 
 @Dao
 interface QuestDao {
@@ -28,14 +29,14 @@ interface QuestDao {
     fun getQuestsByDate(date: String): Flow<List<DailyQuestEntity>>
 
     @Query("SELECT * FROM daily_quests")
-    suspend fun getAllQuests(): Flow<List<DailyQuestEntity>>
+    fun getAllQuests(): Flow<List<DailyQuestEntity>>
 
     @Query("SELECT * FROM daily_quests WHERE id = :questID")
     suspend fun getQuestByID(questID: String): DailyQuestEntity?
 
     @Query("SELECT * FROM daily_quests WHERE type = :questType")
-    suspend fun getQuestsByType(questType: String): Flow<List<DailyQuestEntity>>
+    fun getQuestsByType(questType: String): Flow<List<DailyQuestEntity>>
 
     @Query("SELECT * FROM daily_quests WHERE status = :questStatus")
-    suspend fun getQuestsByStatus(questStatus: String): Flow<List<DailyQuestEntity>>
+    fun getQuestsByStatus(questStatus: String): Flow<List<DailyQuestEntity>>
 }

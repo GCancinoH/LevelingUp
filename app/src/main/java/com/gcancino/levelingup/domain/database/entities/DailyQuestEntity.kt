@@ -2,15 +2,28 @@ package com.gcancino.levelingup.domain.database.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import androidx.room.TypeConverters
+import com.gcancino.levelingup.data.models.quests.QuestDetails
+import com.gcancino.levelingup.data.models.quests.QuestRewards
+import com.gcancino.levelingup.data.models.quests.QuestStatus
+import com.gcancino.levelingup.data.models.quests.QuestType
+import com.gcancino.levelingup.domain.database.converters.Converters
+import java.time.LocalDate
 
 @Entity(tableName = "daily_quests")
 data class DailyQuestEntity(
     @PrimaryKey val id: String,
-    val type: String,
+    @TypeConverters(Converters::class)
+    val type: QuestType?,
+    @TypeConverters(Converters::class)
+    val multipleTypes: List<QuestType>?,
     val title: String,
     val description: String,
-    val status: String,
-    val date: String,
-    val rewards: String,
-    val details: String,
+    @TypeConverters(Converters::class)
+    val status: QuestStatus,
+    val date: LocalDate,
+    @TypeConverters(Converters::class)
+    val rewards: QuestRewards,
+    @TypeConverters(Converters::class)
+    val details: QuestDetails?,
 )
