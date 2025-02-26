@@ -38,6 +38,9 @@ android {
     buildFeatures {
         compose = true
     }
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.15"
+    }
 }
 
 dependencies {
@@ -56,6 +59,7 @@ dependencies {
     implementation(libs.lifecycle.runtime.compose)
     implementation(libs.lifecycle.viewmodel.compose)
     implementation(libs.lifecycle.viewmodel.ktx)
+    implementation(libs.androidx.worker)
 
     // Material
     //implementation(libs.androidx.material3)
@@ -102,6 +106,8 @@ dependencies {
     implementation(libs.retrofit.converter)
     implementation(libs.coil.image)
     implementation("com.onesignal:OneSignal:[5.0.0, 5.99.99]")
+    implementation(libs.glance.appwidget)
+    implementation(libs.glance.appwidget.material)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

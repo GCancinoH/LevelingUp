@@ -14,14 +14,14 @@ import java.time.LocalDate
 data class DailyQuestEntity(
     @PrimaryKey val id: String,
     @TypeConverters(Converters::class)
-    val type: QuestType?,
-    @TypeConverters(Converters::class)
-    val multipleTypes: List<QuestType>?,
+    val type: List<QuestType>?,
     val title: String,
     val description: String,
     @TypeConverters(Converters::class)
     val status: QuestStatus,
     val date: LocalDate,
+    val startedDate: LocalDate? = null,
+    val finishedDate: LocalDate? = null,
     @TypeConverters(Converters::class)
     val rewards: QuestRewards,
     @TypeConverters(Converters::class)

@@ -10,7 +10,7 @@ import com.google.gson.reflect.TypeToken
 import java.time.LocalDate
 
 class Converters {
-    private val gson = Gson()
+    /*private val gson = Gson()
 
     @TypeConverter
     fun fromMap(map: Map<String, Any>): String {
@@ -81,5 +81,5 @@ class Converters {
     @TypeConverter
     fun toQuestDetails(value: String?): QuestDetails? = value?.let {
         gson.fromJson(it, QuestDetails::class.java)
-    }
+    }*/
 }

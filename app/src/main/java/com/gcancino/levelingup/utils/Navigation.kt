@@ -28,6 +28,7 @@ import com.gcancino.levelingup.presentation.auth.signup.improvements.Improvement
 import com.gcancino.levelingup.presentation.auth.signup.initialData.InitialDataScreen
 import com.gcancino.levelingup.presentation.init.InitScreen
 import com.gcancino.levelingup.presentation.user.dashboard.DashboardScreen
+import com.gcancino.levelingup.ui.components.ExpandableFloatingButton
 import kotlinx.coroutines.CoroutineScope
 
 @ExperimentalMaterial3Api
@@ -62,6 +63,13 @@ fun Navigation(
                         } else null
                     }
                 )
+            }
+        },
+        floatingActionButton = {
+            val navBackStackEntry by navController.currentBackStackEntryAsState()
+            val currentRoute = navBackStackEntry?.destination?.route
+            if (currentRoute == "dashboard") {
+                ExpandableFloatingButton()
             }
         }
     ) { innerPadding ->

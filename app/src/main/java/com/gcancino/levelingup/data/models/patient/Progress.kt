@@ -6,7 +6,7 @@ import java.util.Date
 data class Progress(
     val level : Int,
     val exp: Int,
-    val currentCategory: CategoryType,
+    val currentCategory: CategoryType = CategoryType.CATEGORY_BEGINNER,
     val lastLevelUpdate : Date? = null,
     val lastCategoryUpdate : Date? = null
 )

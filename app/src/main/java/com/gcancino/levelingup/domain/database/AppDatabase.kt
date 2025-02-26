@@ -10,10 +10,10 @@ import com.gcancino.levelingup.domain.database.dao.PatientDao
 import com.gcancino.levelingup.domain.database.dao.QuestDao
 import com.gcancino.levelingup.domain.database.entities.DailyQuestEntity
 import com.gcancino.levelingup.domain.database.entities.ExerciseProgressEntity
-import com.gcancino.levelingup.domain.database.entities.Patient
+import com.gcancino.levelingup.domain.database.entities.PatientEntity
 
 @Database(
-    entities = [DailyQuestEntity::class, ExerciseProgressEntity::class, Patient::class],
+    entities = [DailyQuestEntity::class, ExerciseProgressEntity::class, PatientEntity::class],
     version = 1,
     exportSchema = false
 )

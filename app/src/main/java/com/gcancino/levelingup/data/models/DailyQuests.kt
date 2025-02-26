@@ -15,59 +15,8 @@ data class DailyQuest(
     val description: String,
     val status: QuestStatus = QuestStatus.NOT_STARTED,
     val date: LocalDate = LocalDate.now(),
+    val startedDate: LocalDate? = null,
+    val finishedDate: LocalDate? = null,
     val rewards: QuestRewards,
     val details: QuestDetails? = null
 )
-
-/*val dailyQuests = listOf(
-    DailyQuest(
-        id = "dailyQuest_001",
-        multipleTypes = listOf(QuestType.MENTAL_TOUGHNESS, QuestType.RECOVERY),
-        title = "Cold Bath",
-        description = "",
-        status = QuestStatus.NOT_STARTED,
-        date = LocalDate.now(),
-        rewards = QuestRewards(
-            xp = 10,
-            coins = 5,
-            attributes = QuestAttributes(health = 3, intelligence = 3)
-        ),
-        details = QuestDetails.RecoverQuest(
-            coldBaths = 1
-        )
-    ),
-    DailyQuest(
-        id = "dailyQues_002",
-        type = QuestType.RECOVERY,
-        title = "Walking",
-        description = "",
-        status = QuestStatus.NOT_STARTED,
-        date = LocalDate.now(),
-        rewards = QuestRewards(
-            xp = 3,
-            coins = 5,
-            attributes = QuestAttributes(health = 3)
-        ),
-        details = QuestDetails.RecoverQuest(
-            walkingSteps = 6000
-        )
-    ),
-    DailyQuest(
-        id = "dailyQuest_003",
-        type = QuestType.RECOVERY,
-        title = "Water Consumption",
-        description = "",
-        status = QuestStatus.NOT_STARTED,
-        date = LocalDate.now(),
-        rewards = QuestRewards(
-            xp = 3,
-            coins = 5,
-            attributes = QuestAttributes(health = 3)
-        ),
-        details = QuestDetails.RecoverQuest(
-            waterLts = 2.5
-        )
-    )
-
-
-)*/

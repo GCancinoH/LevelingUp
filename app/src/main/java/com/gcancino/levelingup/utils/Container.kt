@@ -38,5 +38,5 @@ class Container(
             .build()
     }
 
-    val patientDao by lazy { appDatabase.patientDao() }
+    //val patientDao by lazy { appDatabase.patientDao() }
 }

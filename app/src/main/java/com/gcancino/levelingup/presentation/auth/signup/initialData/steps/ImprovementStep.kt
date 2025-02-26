@@ -64,10 +64,8 @@ fun ImprovementStep(
                         TappableCard(
                             text = when (improvement) {
                                 Improvement.STRENGTH -> "Strength"
-                                Improvement.ENDURANCE -> "Endurance"
                                 Improvement.MOBILITY -> "Mobility"
                                 Improvement.SELF_DEVELOPMENT -> "Self-Development"
-                                Improvement.NUTRITION -> "Nutrition"
                                 Improvement.HABITS -> "Habit Formation"
                                 Improvement.MENTAL_TOUGHNESS -> "Mental Toughness"
                                 else -> null
