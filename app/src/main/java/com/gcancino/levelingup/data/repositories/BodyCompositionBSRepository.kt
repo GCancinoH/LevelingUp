@@ -2,11 +2,15 @@ package com.gcancino.levelingup.data.repositories
 
 import com.gcancino.levelingup.domain.database.dao.BodyCompositionDao
 import com.gcancino.levelingup.domain.entities.Resource
+import com.gcancino.levelingup.utils.toDomainModel
 import com.gcancino.levelingup.utils.toEntityModel
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
 import java.time.LocalDate
 import java.util.UUID
@@ -38,6 +42,19 @@ class BodyCompositionBSRepository(
             _data.value = Resource.Success(bodyComposition)
         } catch (e: Exception) {
             _data.value = Resource.Error(e.message ?: "Unknown error occurred")
+        }
+    }
+
+    fun getBodyCompositionDaaLocally(id: UUID, playerID: String) : Flow<BodyCompositionData?> = flow {
+        emit(Resource.Loading)
+        try {
+            val bodyCompositionEntity = localDB.getBodyComposition(id, playerID).first()
+            if (bodyCompositionEntity != null) {
+                emit(Resource.Success(bodyCompositionEntity.toDomainModel()))
+            }
+        } catch (e: Exception) {
+            emit(Resource.Error(e.message ?: "Unknown error occurred"))
+
         }
     }
 
