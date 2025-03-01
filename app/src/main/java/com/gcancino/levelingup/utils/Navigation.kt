@@ -69,7 +69,11 @@ fun Navigation(
             val navBackStackEntry by navController.currentBackStackEntryAsState()
             val currentRoute = navBackStackEntry?.destination?.route
             if (currentRoute == "dashboard") {
-                ExpandableFloatingButton()
+                ExpandableFloatingButton(
+                    snackbarState = snackbarHostState,
+                    bodyCompositionViewModel = appContainer.bodyCompositionViewModel,
+                    bloodPressureViewModel = appContainer.bloodPressureViewModel
+                )
             }
         }
     ) { innerPadding ->

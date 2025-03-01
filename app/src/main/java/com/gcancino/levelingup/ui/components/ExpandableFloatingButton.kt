@@ -28,6 +28,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -41,11 +42,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import com.gcancino.levelingup.presentation.user.dashboard.BloodPressureViewModel
+import com.gcancino.levelingup.presentation.user.dashboard.BodyCompositionBSViewModel
 import kotlinx.coroutines.launch
 
 @ExperimentalMaterial3Api
 @Composable
-fun ExpandableFloatingButton()
+fun ExpandableFloatingButton(
+    snackbarState: SnackbarHostState,
+    bodyCompositionViewModel: BodyCompositionBSViewModel,
+    bloodPressureViewModel: BloodPressureViewModel
+)
 {
     var expanded by remember { mutableStateOf(false) }
     var showBottomSheet by remember { mutableStateOf(false) }
@@ -57,6 +64,11 @@ fun ExpandableFloatingButton()
 
     val items = listOf(
         MiniFabItem(Icons.Outlined.MonitorWeight, "Body Composition", {
+            showBottomSheet = true
+            selectedItem = it
+            expanded = false
+        }),
+        MiniFabItem(Icons.Outlined.Bloodtype, "Blood Pressure", {
             showBottomSheet = true
             selectedItem = it
             expanded = false
@@ -73,7 +85,11 @@ fun ExpandableFloatingButton()
             modifier = Modifier.wrapContentHeight(),
         ) {
             when (selectedItem?.title) {
-                "Body Composition" -> BodyCompositionBS()
+                "Body Composition" -> BodyCompositionBS(
+                    snackbarState = snackbarState,
+                    viewModel = bodyCompositionViewModel
+                )
+                "Blood Pressure" -> BloodPressureBS(viewModel = bloodPressureViewModel)
                 else -> null
             }
         }

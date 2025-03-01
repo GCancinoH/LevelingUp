@@ -8,11 +8,44 @@ import com.gcancino.levelingup.data.models.quests.QuestType
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.time.LocalDate
+import java.time.ZoneOffset
+import java.util.Date
+import java.util.UUID
 
 class Converters {
-    /*private val gson = Gson()
+    private val gson = Gson()
 
     @TypeConverter
+    fun fromUUID(uuid: UUID): String {
+        return uuid.toString()
+    }
+
+    @TypeConverter
+    fun toUUID(uuidString: String): UUID {
+        return UUID.fromString(uuidString)
+    }
+
+    @TypeConverter
+    fun fromLocalDate(date: LocalDate): Long {
+        return date.atStartOfDay(ZoneOffset.UTC).toEpochSecond()
+    }
+
+    @TypeConverter
+    fun toLocalDate(timestamp: Long): LocalDate {
+        return LocalDate.ofEpochDay(timestamp)
+    }
+
+    @TypeConverter
+    fun toDate(dateLong: Long?): Date? {
+        return dateLong?.let { Date(it) }
+    }
+
+    @TypeConverter
+    fun fromDate(date: Date?): Long? {
+        return date?.time
+    }
+
+    /*@TypeConverter
     fun fromMap(map: Map<String, Any>): String {
         return Gson().toJson(map)
     }
