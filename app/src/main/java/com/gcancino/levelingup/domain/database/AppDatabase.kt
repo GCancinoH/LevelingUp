@@ -8,15 +8,19 @@ import androidx.room.TypeConverters
 import com.gcancino.levelingup.domain.database.converters.Converters
 import com.gcancino.levelingup.domain.database.dao.BloodPressureDao
 import com.gcancino.levelingup.domain.database.dao.BodyCompositionDao
-import com.gcancino.levelingup.domain.database.dao.PatientDao
-import com.gcancino.levelingup.domain.database.dao.QuestDao
+import com.gcancino.levelingup.domain.database.dao.DailyQuestDao
+import com.gcancino.levelingup.domain.database.dao.ExerciseProgressDao
+import com.gcancino.levelingup.domain.database.dao.PlayerDao
 import com.gcancino.levelingup.domain.database.entities.BodyCompositionEntity
 import com.gcancino.levelingup.domain.database.entities.BloodPressureEntity
+import com.gcancino.levelingup.domain.database.entities.DailyQuestEntity
 import com.gcancino.levelingup.domain.database.entities.ExerciseProgressEntity
-import com.gcancino.levelingup.domain.database.entities.PatientEntity
 
 @Database(
-    entities = [BodyCompositionEntity::class, BloodPressureEntity::class],
+    entities = [
+        BodyCompositionEntity::class, BloodPressureEntity::class, DailyQuestEntity::class,
+        ExerciseProgressEntity::class
+    ],
     version = 2,
     exportSchema = false
 )
@@ -24,6 +28,9 @@ import com.gcancino.levelingup.domain.database.entities.PatientEntity
 abstract class AppDatabase : RoomDatabase() {
     abstract fun bodyCompositionDao(): BodyCompositionDao
     abstract fun bloodPressureDao(): BloodPressureDao
+    abstract fun questDao(): DailyQuestDao
+    abstract fun exerciseProgressDao(): ExerciseProgressDao
+    abstract fun playerDao(): PlayerDao
 
     companion object {
         @Volatile

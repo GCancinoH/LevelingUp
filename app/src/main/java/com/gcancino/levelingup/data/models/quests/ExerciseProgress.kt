@@ -1,5 +1,7 @@
 package com.gcancino.levelingup.data.models.quests
 
+import com.gcancino.levelingup.data.models.DailyQuest
+
 data class ExerciseProgress(
     val exerciseID: String,
     val type: ExerciseType,

@@ -14,10 +14,12 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -36,10 +38,12 @@ import com.gcancino.levelingup.presentation.user.dashboard.BodyCompositionBSView
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
+@ExperimentalMaterial3Api
 @Composable
 fun BodyCompositionBS(
     snackbarState: SnackbarHostState,
-    viewModel: BodyCompositionBSViewModel = viewModel()
+    viewModel: BodyCompositionBSViewModel = viewModel(),
+    onDismiss: () -> Unit
 ) {
     val today = LocalDate.now()
     val formatedDate = today.format(DateTimeFormatter.ofPattern("MMMM dd, yyyy"))
@@ -54,12 +58,14 @@ fun BodyCompositionBS(
     LaunchedEffect(key1 = bodyCompositionState) {
         when (bodyCompositionState) {
             is Resource.Success -> {
+                onDismiss()
                 snackbarState.showSnackbar(
                     message = "Data saved successfully",
                     withDismissAction = true
                 )
             }
             is Resource.Error -> {
+                onDismiss()
                 snackbarState.showSnackbar(
                     message = "Error saving data",
                     withDismissAction = true

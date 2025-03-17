@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.tasks.await
 import java.time.LocalDate
 import java.util.UUID
@@ -45,17 +46,23 @@ class BodyCompositionBSRepository(
         }
     }
 
-    fun getBodyCompositionDaaLocally(id: UUID, playerID: String) : Flow<BodyCompositionData?> = flow {
-        emit(Resource.Loading)
-        try {
-            val bodyCompositionEntity = localDB.getBodyComposition(id, playerID).first()
-            if (bodyCompositionEntity != null) {
-                emit(Resource.Success(bodyCompositionEntity.toDomainModel()))
-            }
-        } catch (e: Exception) {
-            emit(Resource.Error(e.message ?: "Unknown error occurred"))
+    fun getBodyCompositionDataLocally(playerID: String) : Flow<List<BodyCompositionData>> {
+        return localDB.getAllBodyCompositions(playerID)
+            .map { entities -> entities.map { it.toDomainModel() } }
+    }
 
-        }
+    fun getBodyCompositionLocallyByID(id: UUID, playerID: String): Flow<BodyCompositionData?> {
+        return localDB.getBodyComposition(id, playerID)
+            .map { entity -> entity?.toDomainModel() }
+    }
+
+    suspend fun deleteDataByID(id: UUID) {
+        return localDB.deleteDataByID(id)
+    }
+
+    fun hasEntryForToday(playerID: String): Flow<Boolean> {
+        val today = LocalDate.now()
+        return localDB.checkIfEntryExists(playerID, today)
     }
 
     suspend fun saveBodyCompositionData(data: BodyCompositionData) {

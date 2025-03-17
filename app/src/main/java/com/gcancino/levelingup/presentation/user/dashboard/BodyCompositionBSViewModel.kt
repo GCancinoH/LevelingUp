@@ -11,6 +11,7 @@ import androidx.lifecycle.viewModelScope
 import com.gcancino.levelingup.data.repositories.BodyCompositionBSRepository
 import com.gcancino.levelingup.data.repositories.BodyCompositionData
 import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.util.UUID
@@ -21,6 +22,7 @@ class BodyCompositionBSViewModel(
 ) : ViewModel() {
 
     val bodyCompositionData = repository.data
+    val playerID = auth.currentUser?.uid ?: ""
 
     var weight by mutableStateOf("")
     var bmi by mutableStateOf("")
@@ -29,6 +31,8 @@ class BodyCompositionBSViewModel(
     var visceralFat by mutableStateOf("")
     var bodyAge by mutableStateOf("")
     val today = LocalDate.now()
+
+    val hasEntryToday = repository.hasEntryForToday(playerID)
 
     fun saveBodyCompositionData() {
         val userID = auth.currentUser?.uid

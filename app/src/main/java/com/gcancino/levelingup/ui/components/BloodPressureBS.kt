@@ -61,9 +61,10 @@ fun BloodPressureBS(
             text = "on $formatedDate",
             style = MaterialTheme.typography.bodySmall
         )
-        /* Weight & BMI */
+        /* Systolic */
         Spacer(modifier = Modifier.height(8.dp))
         OutlinedTextField(
+            modifier = Modifier.fillMaxWidth(),
             value = viewModel.systolic,
             onValueChange = { it -> viewModel.systolic = it },
             label = { Text("Systolic") },
@@ -74,7 +75,10 @@ fun BloodPressureBS(
                 imeAction = ImeAction.Next
             )
         )
+        /* Diastolic */
+        Spacer(modifier = Modifier.height(8.dp))
         OutlinedTextField(
+            modifier = Modifier.fillMaxWidth(),
             value = viewModel.diastolic,
             onValueChange = { it -> viewModel.diastolic = it },
             label = { Text("Diastolic") },
@@ -85,7 +89,10 @@ fun BloodPressureBS(
                 imeAction = ImeAction.Next
             )
         )
+        /* Pulses per minute */
+        Spacer(modifier = Modifier.height(8.dp))
         OutlinedTextField(
+            modifier = Modifier.fillMaxWidth(),
             value = viewModel.pulsePerMin,
             onValueChange = { it -> viewModel.pulsePerMin = it },
             label = { Text("Pulses per minute") },

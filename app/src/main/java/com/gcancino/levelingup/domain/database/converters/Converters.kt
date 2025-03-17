@@ -1,10 +1,15 @@
 package com.gcancino.levelingup.domain.database.converters
 
 import androidx.room.TypeConverter
+import com.gcancino.levelingup.data.models.quests.ExerciseProgress
+import com.gcancino.levelingup.data.models.quests.ExerciseType
+import com.gcancino.levelingup.data.models.quests.QuestAttributes
 import com.gcancino.levelingup.data.models.quests.QuestDetails
 import com.gcancino.levelingup.data.models.quests.QuestRewards
 import com.gcancino.levelingup.data.models.quests.QuestStatus
 import com.gcancino.levelingup.data.models.quests.QuestType
+import com.gcancino.levelingup.data.models.quests.StageRequirement
+import com.gcancino.levelingup.data.models.quests.StrengthProgression
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.time.LocalDate
@@ -45,7 +50,127 @@ class Converters {
         return date?.time
     }
 
-    /*@TypeConverter
+    /*
+        Daily Quest Converters
+    */
+
+    // Quest Types
+    @TypeConverter
+    fun fromQuestTypeList(types: List<QuestType>?): String? {
+        return types?.joinToString(",") { it.name }
+    }
+
+    @TypeConverter
+    fun toQuestTypeList(value: String?): List<QuestType>? {
+        return value?.split(",")?.map { QuestType.valueOf(it) }
+    }
+
+    // Quest Status
+    @TypeConverter
+    fun fromQuestStatus(status: QuestStatus): String = status.name
+
+    @TypeConverter
+    fun toQuestStatus(value: String): QuestStatus = QuestStatus.valueOf(value)
+
+    // Quest Rewards
+    @TypeConverter
+    fun fromQuestRewards(rewards: QuestRewards): String = gson.toJson(rewards)
+
+    @TypeConverter
+    fun toQuestRewards(value: String): QuestRewards = gson.fromJson(value, QuestRewards::class.java)
+
+    // Quest Details
+    @TypeConverter
+    fun fromQuestDetails(details: QuestDetails?): String? {
+        if (details == null) return null
+
+        val typeInfo = when(details) {
+            is QuestDetails.StrengthQuestDetails -> "strength"
+            is QuestDetails.EnduranceQuestDetails -> "endurance"
+            is QuestDetails.MobilityQuestDetails -> "mobility"
+            is QuestDetails.RecoveryQuestDetails -> "recovery"
+            is QuestDetails.MentalToughnessQuestDetails -> "mental_toughness"
+        }
+
+        val json = gson.toJson(details)
+        val wrapper = mapOf("type" to typeInfo, "data" to json)
+        return gson.toJson(wrapper)
+    }
+
+    @TypeConverter
+    fun toQuestDetails(value: String?): QuestDetails? {
+        if (value == null) return null
+
+        val wrapper = gson.fromJson<Map<String, String>>(
+            value,
+            object : TypeToken<Map<String, String>>() {}.type
+        )
+
+        val type = wrapper["type"] ?: return null
+        val data = wrapper["data"] ?: return null
+
+        return when (type) {
+            "strength" -> gson.fromJson(data, QuestDetails.StrengthQuestDetails::class.java)
+            "endurance" -> gson.fromJson(data, QuestDetails.EnduranceQuestDetails::class.java)
+            "mobility" -> gson.fromJson(data, QuestDetails.MobilityQuestDetails::class.java)
+            "recovery" -> gson.fromJson(data, QuestDetails.RecoveryQuestDetails::class.java)
+            "mental_toughness" -> gson.fromJson(
+                data,
+                QuestDetails.MentalToughnessQuestDetails::class.java
+            )
+
+            else -> null
+        }
+    }
+
+    // Quest Attributes
+    @TypeConverter
+    fun fromQuestAttributes(attributes: QuestAttributes?): String? =
+        attributes?.let { gson.toJson(it) }
+
+    @TypeConverter
+    fun toQuestAttributes(value: String?): QuestAttributes? =
+        value?.let { gson.fromJson(it, QuestAttributes::class.java) }
+
+    // Strength Progression
+    @TypeConverter
+    fun fromStrengthProgression(progression: StrengthProgression?): String? =
+        progression?.let { gson.toJson(it) }
+
+    @TypeConverter
+    fun toStrengthProgression(value: String?): StrengthProgression? =
+        value?.let { gson.fromJson(it, StrengthProgression::class.java) }
+
+    // Stage Requirements
+    @TypeConverter
+    fun fromStageRequirements(requirements: List<StageRequirement>?): String? =
+        requirements?.let { gson.toJson(it) }
+
+    @TypeConverter
+    fun toStageRequirements(value: String?): List<StageRequirement>? =
+        value?.let { gson.fromJson(it, object : TypeToken<List<StageRequirement>>() {}.type) }
+
+    // Exercise Progress
+    @TypeConverter
+    fun fromExerciseProgressList(progressList: List<ExerciseProgress>?): String? =
+        progressList?.let { gson.toJson(it) }
+
+    @TypeConverter
+    fun toExerciseProgressList(value: String?): List<ExerciseProgress>? =
+        value?.let {
+            gson.fromJson(it, object : TypeToken<List<ExerciseProgress>>() {}.type)
+        }
+
+    // Exercise Type
+    @TypeConverter
+    fun fromExerciseType(type: ExerciseType?): String? = type?.name
+
+    @TypeConverter
+    fun toExerciseType(value: String?): ExerciseType? = value?.let { ExerciseType.valueOf(it) }
+
+
+    // Utilities
+    @TypeConverter
     fun fromMap(map: Map<String, Any>): String {
         return Gson().toJson(map)
     }
@@ -54,65 +179,4 @@ class Converters {
     fun toMap(mapString: String): Map<String, Any> {
         return Gson().fromJson(mapString, object : TypeToken<Map<String, Any>>() {}.type)
     }
-
-    @TypeConverter
-    fun questDetailsToString(details: QuestDetails): String = gson.toJson(details)
-
-    @TypeConverter
-    fun stringToQuestDetails(json: String): QuestDetails =
-        gson.fromJson(json, QuestDetails::class.java)
-
-    @TypeConverter
-    fun fromQuestDetails(details: QuestDetails): String {
-        return gson.toJson(details)
-    }
-
-    @TypeConverter
-    fun toQuestDetails(json: String): QuestDetails = gson.fromJson(json, QuestDetails::class.java)
-
-    @TypeConverter
-    fun fromQuestDetailsList(detailsList: List<QuestDetails>): String {
-        return gson.toJson(detailsList)
-    }
-
-    @TypeConverter
-    fun fromQuestRewards(rewards: QuestRewards): String = gson.toJson(rewards)
-
-    @TypeConverter
-    fun toQuestRewards(json: String): QuestRewards = gson.fromJson(json, QuestRewards::class.java)
-
-    @TypeConverter
-    fun fromQuestTpe(type: QuestType?): String? = type?.name
-
-    @TypeConverter
-    fun toQuestType(value: String?): QuestType? = value?.let { QuestType.valueOf(it) }
-
-    @TypeConverter
-    fun fromQuestTypes(types: List<QuestType>?): String? =
-        types?.joinToString(",") { it.name }
-
-    @TypeConverter
-    fun toQuestTypes(value: String?): List<QuestType>? =
-        value?.split(",")?.map { QuestType.valueOf(it) }
-
-    @TypeConverter
-    fun fromQuestStatus(status: QuestStatus): String = status.name
-
-    @TypeConverter
-    fun toQuestStatus(value: String): QuestStatus = QuestStatus.valueOf(value)
-
-    @TypeConverter
-    fun fromLocalDate(date: LocalDate): String = date.toString()
-
-    @TypeConverter
-    fun toLocalDate(value: String): LocalDate = LocalDate.parse(value)
-
-    @TypeConverter
-    fun fromQuestDetails(details: QuestDetails?): String? =
-        details?.let { gson.toJson(it) }
-
-    @TypeConverter
-    fun toQuestDetails(value: String?): QuestDetails? = value?.let {
-        gson.fromJson(it, QuestDetails::class.java)
-    }*/
 }

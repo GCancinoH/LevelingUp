@@ -1,35 +1,8 @@
 package com.gcancino.levelingup.data.repositories
 
-import android.content.Context
-import android.util.Log
-import androidx.work.Constraints
-import androidx.work.CoroutineWorker
-import androidx.work.ExistingPeriodicWorkPolicy
-import androidx.work.NetworkType
-import androidx.work.PeriodicWorkRequestBuilder
-import androidx.work.WorkManager
-import androidx.work.WorkerParameters
-import com.gcancino.levelingup.data.models.Patient
-import com.gcancino.levelingup.data.models.patient.Genders
-import com.gcancino.levelingup.data.models.patient.Progress
-import com.gcancino.levelingup.data.models.patient.Streak
-import com.gcancino.levelingup.data.models.quests.QuestType
-import com.gcancino.levelingup.domain.database.dao.PatientDao
-import com.gcancino.levelingup.domain.database.entities.PatientEntity
-import com.gcancino.levelingup.domain.entities.Resource
+import com.gcancino.levelingup.domain.database.dao.PlayerDao
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.tasks.await
-import java.util.concurrent.TimeUnit
 
 /*fun PatientEntity.toDomainModel() = Patient(
     uid = uid,
@@ -64,7 +37,16 @@ fun Patient.toEntity() = PatientEntity(
     progress = progress,
     attributes = attributes,
 )*/
-class PatientRepository {}
+class PlayerRepository(
+    private val auth: FirebaseAuth,
+    private val db: FirebaseFirestore,
+    private val playerDB: PlayerDao,
+) {
+    private val playerID = auth.currentUser?.uid ?: ""
+
+    suspend fun getPlayerImprovements() {}
+
+}
 /*
 class PatientRepository (
     private val patientDao: PatientDao,

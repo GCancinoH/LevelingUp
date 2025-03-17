@@ -43,3 +43,14 @@ fun BloodPressureData.toEntityModel(): BloodPressureEntity {
         date = this.date
     )
 }
+
+fun BloodPressureEntity.toDomainModel(): BloodPressureData {
+    return BloodPressureData(
+        id = this.id,
+        playerID = this.playerID,
+        systolic = this.systolic,
+        diastolic = this.diastolic,
+        pulsePerMin = this.pulsePerMin,
+        date = this.date
+    )
+}

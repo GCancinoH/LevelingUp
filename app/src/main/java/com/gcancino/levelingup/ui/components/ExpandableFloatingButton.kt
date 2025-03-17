@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.outlined.Bed
 import androidx.compose.material.icons.outlined.Bloodtype
 import androidx.compose.material.icons.outlined.MonitorWeight
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -32,6 +33,8 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.getValue
@@ -52,8 +55,7 @@ fun ExpandableFloatingButton(
     snackbarState: SnackbarHostState,
     bodyCompositionViewModel: BodyCompositionBSViewModel,
     bloodPressureViewModel: BloodPressureViewModel
-)
-{
+) {
     var expanded by remember { mutableStateOf(false) }
     var showBottomSheet by remember { mutableStateOf(false) }
     var selectedItem by remember { mutableStateOf<MiniFabItem?>(null) }
@@ -62,8 +64,11 @@ fun ExpandableFloatingButton(
     )
     val scope = rememberCoroutineScope()
 
+    val bodyCompositionHasEntryForToday by bodyCompositionViewModel.hasEntryToday
+        .collectAsState(initial = false)
+
     val items = listOf(
-        MiniFabItem(Icons.Outlined.MonitorWeight, "Body Composition", {
+        MiniFabItem(Icons.Outlined.Bed, "Sleep", {
             showBottomSheet = true
             selectedItem = it
             expanded = false
@@ -72,7 +77,21 @@ fun ExpandableFloatingButton(
             showBottomSheet = true
             selectedItem = it
             expanded = false
-        })
+        }),
+        MiniFabItem(Icons.Outlined.MonitorWeight, "Body Composition", {
+            if (!bodyCompositionHasEntryForToday) {
+                showBottomSheet = true
+                selectedItem = it
+                expanded = false
+            } else {
+                expanded = false
+                selectedItem = null
+                showBottomSheet = false
+                scope.launch {
+                    snackbarState.showSnackbar("You already have an entry for today!", "x")
+                }
+            }
+        }),
     )
 
     if (showBottomSheet) {
@@ -85,10 +104,16 @@ fun ExpandableFloatingButton(
             modifier = Modifier.wrapContentHeight(),
         ) {
             when (selectedItem?.title) {
-                "Body Composition" -> BodyCompositionBS(
-                    snackbarState = snackbarState,
-                    viewModel = bodyCompositionViewModel
-                )
+                "Body Composition" -> {
+                    BodyCompositionBS(
+                        snackbarState = snackbarState,
+                        viewModel = bodyCompositionViewModel,
+                        onDismiss = {
+                            selectedItem = null
+                            showBottomSheet = false
+                        }
+                    )
+                }
                 "Blood Pressure" -> BloodPressureBS(viewModel = bloodPressureViewModel)
                 else -> null
             }

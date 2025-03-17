@@ -4,6 +4,8 @@ import android.content.Context
 import androidx.room.Room
 import com.gcancino.levelingup.data.repositories.BloodPressureBSRepository
 import com.gcancino.levelingup.data.repositories.BodyCompositionBSRepository
+import com.gcancino.levelingup.data.repositories.PlayerRepository
+import com.gcancino.levelingup.data.repositories.QuestRepository
 import com.gcancino.levelingup.data.repositories.auth.AuthRepositoryImp
 import com.gcancino.levelingup.data.repositories.improvement.ImprovementRepository
 import com.gcancino.levelingup.domain.database.AppDatabase
@@ -16,6 +18,7 @@ import com.gcancino.levelingup.presentation.auth.signup.initialData.InitialDataV
 import com.gcancino.levelingup.presentation.init.InitScreenViewModel
 import com.gcancino.levelingup.presentation.user.dashboard.BloodPressureViewModel
 import com.gcancino.levelingup.presentation.user.dashboard.BodyCompositionBSViewModel
+import com.gcancino.levelingup.presentation.user.dashboard.DashboardViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
@@ -27,6 +30,7 @@ class Container(
     val auth by lazy { FirebaseAuth.getInstance() }
     val db by lazy { FirebaseFirestore.getInstance() }
     val storage by lazy { FirebaseStorage.getInstance() }
+    val storeManager by lazy { DataStoreManager(context) }
 
     // Local Database initialization
     private val appDatabase : AppDatabase by lazy {
@@ -41,6 +45,9 @@ class Container(
     // DAOs
     val bodyCompositionDao by lazy { appDatabase.bodyCompositionDao() }
     val bloodPressureDao by lazy { appDatabase.bloodPressureDao() }
+    val questDao by lazy { appDatabase.questDao() }
+    val exerciseDB by lazy { appDatabase.exerciseProgressDao() }
+    val playerDao by lazy { appDatabase.playerDao() }
 
     // Repositories
     private val authRepository by lazy { AuthRepositoryImp() }
@@ -49,6 +56,10 @@ class Container(
     private val improvementUseCase by lazy { ImprovementUseCase(improvementRepository) }
     private val bodyCompositionRepository by lazy { BodyCompositionBSRepository(bodyCompositionDao, db )}
     private val bloodPressureRepository by lazy { BloodPressureBSRepository(bloodPressureDao, db )}
+    private val playerRepository by lazy { PlayerRepository(auth, db, storeManager) }
+    private val questRepository by lazy {
+        QuestRepository(db, storeManager, playerRepository, questDao, exerciseDB)
+    }
 
     // View Models
     val initViewModel by lazy { InitScreenViewModel(authUseCase) }
@@ -64,6 +75,13 @@ class Container(
         repository = bloodPressureRepository,
         auth = auth
     ) }
+    val dashboardViewModel by lazy {
+        DashboardViewModel(
+            bodyCompositionRepository = bodyCompositionRepository,
+            auth = auth
+
+        )
+    }
 
 
 

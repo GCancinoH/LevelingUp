@@ -13,8 +13,9 @@ import java.time.LocalDate
 @Entity(tableName = "daily_quests")
 data class DailyQuestEntity(
     @PrimaryKey val id: String,
+    val qID: String,
     @TypeConverters(Converters::class)
-    val type: List<QuestType>?,
+    val types: List<QuestType>?,
     val title: String,
     val description: String,
     @TypeConverters(Converters::class)

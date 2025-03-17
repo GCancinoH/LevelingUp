@@ -11,8 +11,8 @@ import com.gcancino.levelingup.data.models.patient.Progress
 import com.gcancino.levelingup.data.models.patient.Streak
 import java.util.Date
 
-@Entity(tableName = "patients")
-data class PatientEntity(
+@Entity(tableName = "players")
+data class PlayerEntity(
     @PrimaryKey val uid: String,
     val displayName: String? = "",
     val email: String,

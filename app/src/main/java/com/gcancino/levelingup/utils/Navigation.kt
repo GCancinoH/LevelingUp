@@ -131,7 +131,9 @@ fun Navigation(
                 /* TODO() */
             }
             composable("dashboard") {
-                DashboardScreen()
+                DashboardScreen(
+                    viewModel = appContainer.dashboardViewModel
+                )
             }
         }
     }
