@@ -4,6 +4,8 @@ package com.gcancino.levelingup.data.repositories.auth
 import com.gcancino.levelingup.data.models.Patient
 import com.gcancino.levelingup.data.models.patient.Progress
 import com.gcancino.levelingup.data.models.patient.progress.CategoryType
+import com.gcancino.levelingup.domain.database.dao.PlayerDao
+import com.gcancino.levelingup.domain.database.entities.PlayerEntity
 import com.gcancino.levelingup.domain.entities.Resource
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
@@ -11,44 +13,39 @@ import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
+import java.util.Date
 
 class AuthRepositoryImp() {
     private val auth = FirebaseAuth.getInstance()
     private val db = FirebaseFirestore.getInstance()
     
-    fun getCurrentUser(): Flow<Resource<Patient>> = flow {
-        emit(Resource.Loading())
+    suspend fun getCurrentPlayerFromDB(): Resource<Patient> {
         val patient = auth.currentUser
-        when(patient) {
-            null -> emit(Resource.Error("User not found"))
-            else -> {
-                val patientData = patient.let {
-                    Patient(
-                        uid = it.uid,
-                        email = it.email ?: "",
-                        displayName = it.displayName ?: "",
-                    )
-                }
-                emit(Resource.Success(patientData))
-            }
+        return when(patient) {
+            null -> Resource.Error("Player not found")
+            else -> Resource.Success(
+                Patient(
+                    uid = patient.uid,
+                    email = patient.email ?: "",
+                    displayName = patient.displayName ?: "",
+                )
+            )
         }
     }
 
-    fun signInWithEmail(email: String, password: String): Flow<Resource<Patient>> = flow {
-        emit(Resource.Loading())
-        try {
+    suspend fun signInWithEmail(email: String, password: String): Resource<Patient> {
+        return try {
             val result = auth.signInWithEmailAndPassword(email, password).await()
             val patient = result.user
-            when(patient) {
-                null -> emit(Resource.Error("Authentication failed"))
-                else -> patient.let {
-                    val user = Patient(
-                        uid = it.uid,
-                        email = it.email ?: "",
-                        displayName = it.displayName ?: "",
+            when (patient) {
+                null -> Resource.Error("Authentication failed")
+                else -> Resource.Success(
+                    Patient(
+                        uid = patient.uid,
+                        email = patient.email ?: "",
+                        displayName = patient.displayName ?: "",
                     )
-                    emit(Resource.Success(user))
-                }
+                )
             }
         } catch (e: FirebaseAuthException) {
             val errorMessage = when (e.errorCode) {
@@ -60,9 +57,9 @@ class AuthRepositoryImp() {
                 "ERROR_EMAIL_ALREADY_IN_USE" -> "Email already in use"
                 else -> e.localizedMessage ?: "Authentication failed"
             }
-            emit(Resource.Error(errorMessage))
+           Resource.Error(errorMessage)
         } catch (e: Exception) {
-            emit(Resource.Error(e.localizedMessage ?: "Unknown error"))
+            Resource.Error(e.localizedMessage ?: "Unknown error")
         }
     }
 
@@ -71,30 +68,49 @@ class AuthRepositoryImp() {
         /* TODO() */
     }
 
-    fun signUpWithEmail(email: String, password: String) : Flow<Resource<Patient>> = flow {
-        emit(Resource.Loading())
-        try {
+    suspend fun signUpWithEmail(
+        email: String,
+        password: String,
+        displayName: String,
+        playerDao: PlayerDao
+    ): Resource<Patient> {
+        return try {
             val result = auth.createUserWithEmailAndPassword(email, password).await()
-            val patient = result.user
-            when (patient) {
-                null -> emit(Resource.Error("User creation failed"))
+            val player = result.user
+            when (player) {
+                null -> Resource.Error("User creation failed")
                 else -> {
-                    patient.let {
-                        val recentPatient = Patient(
-                            uid = it.uid,
-                            email = it.email ?: "",
-                            progress = Progress(
-                                level = 1,
-                                exp = 0,
-                                currentCategory = CategoryType.CATEGORY_BEGINNER
-                            )
+                    val recentPlayer = Patient(
+                        uid = player.uid,
+                        email = player.email ?: "",
+                        displayName = displayName,
+                        progress = Progress(
+                            level = 1,
+                            exp = 0,
+                            currentCategory = CategoryType.CATEGORY_BEGINNER
                         )
-                        // Save patient data
-                        db.collection("patients").document(it.uid)
-                            .set(recentPatient)
+                    )
 
-                        emit(Resource.Success(recentPatient))
-                    }
+                    // Save to Firestore
+                    db.collection("players").document(player.uid)
+                        .set(recentPlayer)
+                        .await()
+
+                    // Save to Room DB
+                    val playerEntity = PlayerEntity(
+                        uid = player.uid,
+                        email = player.email ?: "",
+                        displayName = displayName,
+                        height = 0.0,
+                        progress = recentPlayer.progress,
+                        lastSync = Date(),
+                        needsSync = false
+                    )
+                    playerDao.insertPlayer(playerEntity)
+
+                    Resource.Success(recentPlayer)
+                    //patient.updateDisplayName(displayName).await()
+                    //patient.sendEmailVerification().await()
                 }
             }
         } catch (e: FirebaseAuthException) {
@@ -107,19 +123,18 @@ class AuthRepositoryImp() {
                 "ERROR_EMAIL_ALREADY_IN_USE" -> "Email already in use"
                 else -> e.localizedMessage ?: "Authentication failed"
             }
-            emit(Resource.Error(errorMessage))
+            Resource.Error(errorMessage)
         } catch (e: Exception) {
-            emit(Resource.Error(e.localizedMessage ?: "Unknown error"))
+            Resource.Error(e.localizedMessage ?: "Unknown error")
         }
     }
 
-    fun signOut() : Flow<Resource<Unit>> = flow {
-        emit(Resource.Loading())
-        try {
+    fun signOut(): Resource<Unit> {
+        return try {
             auth.signOut()
-            emit(Resource.Success(Unit))
+            Resource.Success(Unit)
         } catch (e: Exception) {
-            emit(Resource.Error(e.localizedMessage ?: "Unknown error"))
+            Resource.Error(e.localizedMessage ?: "Sign out failed")
         }
     }
 

@@ -11,7 +11,6 @@ import com.gcancino.levelingup.domain.database.entities.ExerciseProgressEntity
 
 @Dao
 interface ExerciseProgressDao {
-    val questDao: DailyQuestDao
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertExerciseProgress(exerciseProgress: ExerciseProgressEntity)
@@ -24,6 +23,7 @@ interface ExerciseProgressDao {
 
     @Transaction
     suspend fun insertQuestWithProgress(
+        questDao: DailyQuestDao,
         quest: DailyQuestEntity,
         progressList: List<ExerciseProgressEntity>) {
         questDao.insertQuest(quest)

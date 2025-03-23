@@ -41,16 +41,13 @@ class SignInViewModel(
     }
 
     fun signIn() {
-        _authState.value = null
+        _authState.value = Resource.Loading()
         viewModelScope.launch {
             try {
-                authUseCase.signInWithEmail(email, password).collect { resource ->
-                    Log.d("SignInViewModel", "Resource: $resource")
-                    _authState.value = resource
-                }
+                val result = authUseCase.signInWithEmail(email, password)
+                _authState.value = result
             } catch (e: Exception) {
                 _authState.value = Resource.Error(e.localizedMessage ?: "Sign in failed")
-                Log.d("SigninViewModel", _authState.value.toString())
             }
         }
     }

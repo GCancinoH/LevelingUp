@@ -4,7 +4,7 @@ enum class Improvement {
     STRENGTH,
     MOBILITY,
     SELF_DEVELOPMENT,
-    HABITS,
+    RECOVERY,
     MENTAL_TOUGHNESS
 }
 

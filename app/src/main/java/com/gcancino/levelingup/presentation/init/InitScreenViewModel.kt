@@ -24,9 +24,8 @@ class InitScreenViewModel(
     private fun checkCurrentUser() {
         viewModelScope.launch {
             delay(2000)
-            authUseCase.getCurrentUser().collect { resource ->
-                _userState.value = resource
-            }
+            val result = authUseCase.getPlayerFromDB()
+            _userState.value = result
         }
     }
 }

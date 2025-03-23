@@ -1,6 +1,12 @@
 package com.gcancino.levelingup.domain.database.converters
 
 import androidx.room.TypeConverter
+import com.gcancino.levelingup.data.models.patient.Attributes
+import com.gcancino.levelingup.data.models.patient.Improvement
+import com.gcancino.levelingup.data.models.patient.InitialData
+import com.gcancino.levelingup.data.models.patient.Objectives
+import com.gcancino.levelingup.data.models.patient.Progress
+import com.gcancino.levelingup.data.models.patient.Streak
 import com.gcancino.levelingup.data.models.quests.ExerciseProgress
 import com.gcancino.levelingup.data.models.quests.ExerciseType
 import com.gcancino.levelingup.data.models.quests.QuestAttributes
@@ -178,5 +184,69 @@ class Converters {
     @TypeConverter
     fun toMap(mapString: String): Map<String, Any> {
         return Gson().fromJson(mapString, object : TypeToken<Map<String, Any>>() {}.type)
+    }
+
+    /*
+        Player Converters
+    */
+
+    // Improvement List
+    @TypeConverter
+    fun fromImprovementList(improvements: List<Improvement>?): String? =
+        improvements?.let { gson.toJson(it) }
+
+    @TypeConverter
+    fun toImprovementList(value: String?): List<Improvement>? {
+        if (value == null) return null
+
+        val type = object : TypeToken<List<Improvement>>() {}.type
+        return gson.fromJson(value, type)
+    }
+
+    // Initial Data Converter
+    @TypeConverter
+    fun fromInitialData(initialData: InitialData?): String? = initialData?.let { gson.toJson(it) }
+
+    @TypeConverter
+    fun toInitialData(value: String?): InitialData? {
+        if (value == null) return null
+        return gson.fromJson(value, InitialData::class.java)
+    }
+
+    // Objectives
+    @TypeConverter
+    fun fromObjectives(objectives: Objectives?): String? = objectives?.name
+
+    @TypeConverter
+    fun toObjectives(value: String?): Objectives? = value?.let { Objectives.valueOf(it) }
+
+    // Progress
+    @TypeConverter
+    fun fromProgress(progress: Progress?): String = gson.toJson(progress)
+
+    @TypeConverter
+    fun toProgress(value: String?): Progress? {
+        if (value == null) return null
+        return gson.fromJson(value, Progress::class.java)
+    }
+
+    // Attributes
+    @TypeConverter
+    fun fromAttributes(attributes: Attributes?): String? = attributes?.let { gson.toJson(it) }
+
+    @TypeConverter
+    fun toAttributes(value: String?): Attributes? {
+        if (value == null) return null
+        return gson.fromJson(value, Attributes::class.java)
+    }
+
+    // Streak
+    @TypeConverter
+    fun fromStreak(streak: Streak?): String? = streak?.let { gson.toJson(it) }
+
+    @TypeConverter
+    fun toStreak(value: String?): Streak? {
+        if(value == null) return null
+        return gson.fromJson(value, Streak::class.java)
     }
 }

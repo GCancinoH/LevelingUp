@@ -1,5 +1,6 @@
 package com.gcancino.levelingup.data.repositories
 
+import com.gcancino.levelingup.data.models.patient.Improvement
 import com.gcancino.levelingup.domain.database.dao.PlayerDao
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -44,7 +45,15 @@ class PlayerRepository(
 ) {
     private val playerID = auth.currentUser?.uid ?: ""
 
-    suspend fun getPlayerImprovements() {}
+    suspend fun getPlayerImprovements(): List<Improvement> {
+        val playerID = auth.currentUser?.uid ?: ""
+        return if (playerID.isNotEmpty()) {
+            val player = playerDB.getPlayerByID(playerID)
+            player?.improvements ?: emptyList()
+        } else {
+            emptyList()
+        }
+    }
 
 }
 /*

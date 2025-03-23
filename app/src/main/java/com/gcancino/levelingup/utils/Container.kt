@@ -2,6 +2,7 @@ package com.gcancino.levelingup.utils
 
 import android.content.Context
 import androidx.room.Room
+import com.gcancino.levelingup.domain.preferences.DataStoreManager
 import com.gcancino.levelingup.data.repositories.BloodPressureBSRepository
 import com.gcancino.levelingup.data.repositories.BodyCompositionBSRepository
 import com.gcancino.levelingup.data.repositories.PlayerRepository
@@ -56,7 +57,7 @@ class Container(
     private val improvementUseCase by lazy { ImprovementUseCase(improvementRepository) }
     private val bodyCompositionRepository by lazy { BodyCompositionBSRepository(bodyCompositionDao, db )}
     private val bloodPressureRepository by lazy { BloodPressureBSRepository(bloodPressureDao, db )}
-    private val playerRepository by lazy { PlayerRepository(auth, db, storeManager) }
+    private val playerRepository by lazy { PlayerRepository(auth, db, playerDao) }
     private val questRepository by lazy {
         QuestRepository(db, storeManager, playerRepository, questDao, exerciseDB)
     }
@@ -64,7 +65,7 @@ class Container(
     // View Models
     val initViewModel by lazy { InitScreenViewModel(authUseCase) }
     val signInViewModel by lazy { SignInViewModel(authUseCase) }
-    val signUpViewModel by lazy { SignUpViewModel(authUseCase) }
+    val signUpViewModel by lazy { SignUpViewModel(authUseCase, playerDao) }
     val improvementViewModel by lazy { ImprovementViewModel(improvementUseCase, authUseCase) }
     val initialDataViewModel by lazy { InitialDataViewModel() }
     val bodyCompositionViewModel by lazy { BodyCompositionBSViewModel(
@@ -82,6 +83,7 @@ class Container(
 
         )
     }
+
 
 
 

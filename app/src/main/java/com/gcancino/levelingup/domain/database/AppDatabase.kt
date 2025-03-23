@@ -15,11 +15,12 @@ import com.gcancino.levelingup.domain.database.entities.BodyCompositionEntity
 import com.gcancino.levelingup.domain.database.entities.BloodPressureEntity
 import com.gcancino.levelingup.domain.database.entities.DailyQuestEntity
 import com.gcancino.levelingup.domain.database.entities.ExerciseProgressEntity
+import com.gcancino.levelingup.domain.database.entities.PlayerEntity
 
 @Database(
     entities = [
         BodyCompositionEntity::class, BloodPressureEntity::class, DailyQuestEntity::class,
-        ExerciseProgressEntity::class
+        ExerciseProgressEntity::class, PlayerEntity::class
     ],
     version = 2,
     exportSchema = false

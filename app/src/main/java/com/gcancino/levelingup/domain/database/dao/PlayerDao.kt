@@ -16,8 +16,8 @@ interface PlayerDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertPlayer(patient: PlayerEntity)
 
-    @Query("SELECT * FROM players WHERE uid = :uid")
-    fun getPatientByUid(uid: String): Flow<PlayerEntity?>
+    @Query("SELECT * FROM players WHERE uid = :uid LIMIT 1")
+    suspend fun getPlayerByID(uid: String): PlayerEntity?
 
     @Query("SELECT * FROM players")
     fun getAllPlayers(): Flow<List<PlayerEntity>>

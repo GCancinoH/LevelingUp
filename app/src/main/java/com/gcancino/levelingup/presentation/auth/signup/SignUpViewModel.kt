@@ -7,6 +7,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gcancino.levelingup.data.models.Patient
+import com.gcancino.levelingup.domain.database.dao.PlayerDao
 import com.gcancino.levelingup.domain.entities.Resource
 import com.gcancino.levelingup.domain.usecases.AuthUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,7 +16,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class SignUpViewModel(
-    private val authUseCase: AuthUseCase
+    private val authUseCase: AuthUseCase,
+    private val playerDao: PlayerDao
 ) : ViewModel() {
     var name by mutableStateOf("")
         private set
@@ -57,7 +59,7 @@ class SignUpViewModel(
     }
 
     fun signUp() {
-        _authState.value = null
+        _authState.value = Resource.Loading()
         // Check the form is valid
         if (!isValidEmail() || !isValidPassword()) {
             _authState.value = Resource.Error("Form is not valid")
@@ -66,14 +68,10 @@ class SignUpViewModel(
 
         viewModelScope.launch {
             try {
-                authUseCase.signUpWithEmail(email, password).collect { resource ->
-                    Log.d("SignUpViewModel", "Resource: $resource")
-                    _authState.value = resource
-                    Log.d("SignUpViewModel", _authState.value.toString())
-                }
+                val result = authUseCase.signUpWithEmail(email, password, name, playerDao)
+                _authState.value = result
             } catch (e: Exception) {
-                _authState.value = Resource.Error(e.localizedMessage ?: "Sign un failed")
-                Log.d("SignUpViewModel", _authState.value.toString())
+                _authState.value = Resource.Error(e.localizedMessage ?: "Sign up failed")
             }
         }
     }

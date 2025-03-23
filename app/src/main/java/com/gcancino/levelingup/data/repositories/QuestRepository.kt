@@ -2,6 +2,7 @@ package com.gcancino.levelingup.data.repositories
 
 import androidx.work.WorkManager
 import com.gcancino.levelingup.data.models.DailyQuest
+import com.gcancino.levelingup.data.models.patient.Improvement
 import com.gcancino.levelingup.data.models.quests.QuestDetails
 import com.gcancino.levelingup.data.models.quests.QuestRewards
 import com.gcancino.levelingup.data.models.quests.QuestStatus
@@ -41,7 +42,10 @@ class QuestRepository(
                     is Resource.Success -> {
                         val playerImprovements = playerRepository.getPlayerImprovements()
                         val filteredQuests = dbQuests.data?.filter { quest ->
-                            quest.types.any { playerImprovements.contains(it) }
+                            quest.types.any { questTypes ->
+                                val improvement = convertQuestTypeToImprovement(questTypes)
+                                improvement != null && playerImprovements.contains(improvement)
+                            }
                         } ?: emptyList()
 
                         val questEntities = filteredQuests.map { quest ->
@@ -123,6 +127,16 @@ class QuestRepository(
             Resource.Success(quests)
         } catch (e: Exception) {
            Resource.Error(e.message ?: "Failed to fetch quests: ${e.message}")
+        }
+    }
+
+    private fun convertQuestTypeToImprovement(questType: QuestType): Improvement? {
+        return when (questType) {
+            QuestType.STRENGTH -> Improvement.STRENGTH
+            QuestType.MOBILITY -> Improvement.MOBILITY
+            QuestType.MENTAL_TOUGHNESS -> Improvement.MENTAL_TOUGHNESS
+            QuestType.SELF_DEVELOPMENT -> Improvement.SELF_DEVELOPMENT
+            QuestType.RECOVERY -> Improvement.RECOVERY
         }
     }
 }
