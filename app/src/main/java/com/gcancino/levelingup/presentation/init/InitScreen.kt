@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gcancino.levelingup.domain.entities.Resource
 import com.gcancino.levelingup.R
+import com.gcancino.levelingup.data.models.Patient
 
 @Composable
 fun InitScreen(
@@ -28,26 +29,40 @@ fun InitScreen(
     onSignInError: () -> Unit,
 ) {
     val userState by viewModel.userState.collectAsStateWithLifecycle()
+    val isPlayerSavedLocally by viewModel.isPlayerDataSavedLocally.collectAsStateWithLifecycle()
 
-    if (userState is Resource.Loading) {
-        InitialLoadingContent()
+    if (userState is Resource.Loading || isPlayerSavedLocally is Resource.Loading) {
+        InitialLoadingContent(isPlayerSavedLocally, userState)
     }
 
     LaunchedEffect(userState) {
         when (val state = userState) {
             is Resource.Success -> {
-                if(state.data != null) {
-                    onSignedIn()
-                } else { onSignInError() }
+                if (state.data == null) {
+                    onSignInError()
+                }
             }
             is Resource.Error -> onSignInError()
-            is Resource.Loading -> {}
+            else -> null
+        }
+    }
+
+    LaunchedEffect(isPlayerSavedLocally) {
+        if (userState is Resource.Success) {
+            when (isPlayerSavedLocally) {
+                is Resource.Success -> onSignedIn()
+                is Resource.Error -> onSignInError()
+                else -> null
+            }
         }
     }
 }
 
 @Composable
-fun InitialLoadingContent() {
+fun InitialLoadingContent(
+    isPlayerSavedLocally: Resource<Unit>,
+    userState: Resource<Patient>
+) {
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -64,7 +79,13 @@ fun InitialLoadingContent() {
             color = Color.White
         )
         Spacer(modifier = Modifier.height(16.dp))
-        Text(text = "Initializing...")
+        if(userState is Resource.Loading) {
+            Text(text = "Checking user status...")
+        } else if (isPlayerSavedLocally is Resource.Loading) {
+            Text(text = "Checking if player data is saved locally...")
+        }
+
+
     }
 }
 

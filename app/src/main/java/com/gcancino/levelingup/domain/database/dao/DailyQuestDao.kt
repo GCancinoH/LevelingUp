@@ -9,6 +9,7 @@ import androidx.room.Update
 import com.gcancino.levelingup.domain.database.entities.DailyQuestEntity
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
+import java.util.UUID
 
 @Dao
 interface DailyQuestDao {

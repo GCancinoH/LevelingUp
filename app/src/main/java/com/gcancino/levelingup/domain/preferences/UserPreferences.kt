@@ -6,5 +6,6 @@ import java.time.LocalDate
 data class UserPreferences(
     val areDailyQuestsLoaded: Boolean,
     val lastQuestReset: LocalDate,
-    val selectedImprovements: Set<QuestType>
+    val selectedImprovements: Set<QuestType>,
+    val isPlayerDataSavedLocally: Boolean
 )

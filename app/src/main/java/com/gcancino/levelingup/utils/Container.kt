@@ -57,13 +57,13 @@ class Container(
     private val improvementUseCase by lazy { ImprovementUseCase(improvementRepository) }
     private val bodyCompositionRepository by lazy { BodyCompositionBSRepository(bodyCompositionDao, db )}
     private val bloodPressureRepository by lazy { BloodPressureBSRepository(bloodPressureDao, db )}
-    private val playerRepository by lazy { PlayerRepository(auth, db, playerDao) }
+    private val playerRepository by lazy { PlayerRepository(auth, db, playerDao, storeManager) }
     private val questRepository by lazy {
         QuestRepository(db, storeManager, playerRepository, questDao, exerciseDB)
     }
 
     // View Models
-    val initViewModel by lazy { InitScreenViewModel(authUseCase) }
+    val initViewModel by lazy { InitScreenViewModel(authUseCase, playerRepository) }
     val signInViewModel by lazy { SignInViewModel(authUseCase) }
     val signUpViewModel by lazy { SignUpViewModel(authUseCase, playerDao) }
     val improvementViewModel by lazy { ImprovementViewModel(improvementUseCase, authUseCase) }
@@ -79,8 +79,10 @@ class Container(
     val dashboardViewModel by lazy {
         DashboardViewModel(
             bodyCompositionRepository = bodyCompositionRepository,
-            auth = auth
-
+            auth = auth,
+            questRepository = questRepository,
+            questDao = questDao,
+            storeManager = storeManager
         )
     }
 

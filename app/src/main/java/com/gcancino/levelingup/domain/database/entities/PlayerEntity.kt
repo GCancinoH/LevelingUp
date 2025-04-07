@@ -19,7 +19,7 @@ data class PlayerEntity(
     val photoUrl: String? = "",
     val birthday: Date? = null,
     val age: Int? = null,
-    val height: Double,
+    val height: Double? = null,
     val gender: String? = null,
     val phoneNumber: String? = null,
     @ColumnInfo(name = "initial_data")

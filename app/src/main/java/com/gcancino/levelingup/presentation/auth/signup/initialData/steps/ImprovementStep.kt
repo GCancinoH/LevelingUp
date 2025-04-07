@@ -66,7 +66,7 @@ fun ImprovementStep(
                                 Improvement.STRENGTH -> "Strength"
                                 Improvement.MOBILITY -> "Mobility"
                                 Improvement.SELF_DEVELOPMENT -> "Self-Development"
-                                Improvement.HABITS -> "Habit Formation"
+                                Improvement.RECOVERY -> "Recovery"
                                 Improvement.MENTAL_TOUGHNESS -> "Mental Toughness"
                                 else -> null
                             }.toString(),

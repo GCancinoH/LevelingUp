@@ -19,12 +19,12 @@ data class DailyQuestEntity(
     val title: String,
     val description: String,
     @TypeConverters(Converters::class)
-    val status: QuestStatus,
+    val status: QuestStatus = QuestStatus.NOT_STARTED,
     val date: LocalDate,
     val startedDate: LocalDate? = null,
     val finishedDate: LocalDate? = null,
     @TypeConverters(Converters::class)
-    val rewards: QuestRewards,
+    val rewards: QuestRewards? = null,
     @TypeConverters(Converters::class)
-    val details: QuestDetails?,
+    val details: QuestDetails? = null,
 )

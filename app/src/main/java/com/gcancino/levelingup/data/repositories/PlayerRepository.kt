@@ -1,11 +1,22 @@
 package com.gcancino.levelingup.data.repositories
 
+import android.util.Log
+import com.gcancino.levelingup.data.models.Patient
+import com.gcancino.levelingup.data.models.patient.Genders
 import com.gcancino.levelingup.data.models.patient.Improvement
 import com.gcancino.levelingup.domain.database.dao.PlayerDao
+import com.gcancino.levelingup.domain.database.entities.PlayerEntity
+import com.gcancino.levelingup.domain.entities.Resource
+import com.gcancino.levelingup.domain.preferences.DataStoreManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
+import com.google.firebase.auth.FirebaseUser
 
-/*fun PatientEntity.toDomainModel() = Patient(
+fun PlayerEntity.toDomainModel() = Patient(
     uid = uid,
     displayName = displayName,
     email = email,
@@ -22,7 +33,7 @@ import com.google.firebase.firestore.FirebaseFirestore
     streak = streak,
 )
 
-fun Patient.toEntity() = PatientEntity(
+fun Patient.toEntityModel() = PlayerEntity(
     uid = uid,
     displayName = displayName,
     email = email,
@@ -30,28 +41,96 @@ fun Patient.toEntity() = PatientEntity(
     birthday = birthday,
     age = age,
     height = height,
-    gender = gender?.name,
+    gender = gender.toString(),
     phoneNumber = phoneNumber,
     initialData = initialData,
     improvements = improvements,
     objectives = objectives,
     progress = progress,
-    attributes = attributes,
-)*/
+    streak = streak,
+
+)
+
 class PlayerRepository(
     private val auth: FirebaseAuth,
     private val db: FirebaseFirestore,
     private val playerDB: PlayerDao,
+    private val storeManager: DataStoreManager
 ) {
     private val playerID = auth.currentUser?.uid ?: ""
+
+    suspend fun getCurrentPlayer(): Resource<Patient> {
+        return try {
+            val player = auth.currentUser
+            if (player != null) {
+                fetchPlayerDataFromFirestore()
+            } else {
+                Resource.Success(null!!)
+            }
+        } catch (e: Exception) {
+            Log.e("PlayerRepository", "Failed to get current player: ${e.message}")
+            Resource.Error(e.message ?: "Failed to get current player")
+        }
+    }
 
     suspend fun getPlayerImprovements(): List<Improvement> {
         val playerID = auth.currentUser?.uid ?: ""
         return if (playerID.isNotEmpty()) {
-            val player = playerDB.getPlayerByID(playerID)
-            player?.improvements ?: emptyList()
+            try {
+                withContext(Dispatchers.IO) {
+                    val player = playerDB.getPlayerByID(playerID)
+                    player?.improvements ?: emptyList()
+                }
+            } catch(e: Exception) {
+                Log.e("PlayerRepository", "Failed to get player improvements: ${e.message}")
+                emptyList()
+            }
+
         } else {
             emptyList()
+        }
+    }
+
+    suspend fun savePlayerDataLocally(): Resource<Unit> {
+        Resource.Loading(Unit)
+        return try {
+            val userPreferences = storeManager.userPreferences.first()
+            if (!userPreferences.isPlayerDataSavedLocally) {
+                val playerFromFirestore = fetchPlayerDataFromFirestore()
+                when (playerFromFirestore) {
+                    is Resource.Success -> {
+                        withContext(Dispatchers.IO) {
+                            playerDB.insertPlayer(playerFromFirestore.data!!.toEntityModel())
+                        }
+                        storeManager.updatePlayerDataSavedStatus(true)
+                        return Resource.Success(Unit)
+                    }
+                    is Resource.Error -> {
+                        Log.e("PlayerRepository", "Failed to fetch player data: ${playerFromFirestore.message}")
+                        return Resource.Error(playerFromFirestore.message ?: "Failed to fetch player data")
+                    }
+                    else -> {
+                        Log.e("PlayerRepository", "Unknown error fetching player data")
+                        return Resource.Error("Unknown error")
+                    }
+                }
+            } else {
+                Resource.Success(Unit)
+            }
+        } catch (e: Exception) {
+            Log.d("PlayerRepository", "Failed to save player data locally: ${e.message}")
+            Resource.Error(e.message ?: "Failed to save player data locally")
+        }
+    }
+
+    private suspend fun fetchPlayerDataFromFirestore(): Resource<Patient> {
+        return try {
+            val playerSnapshot = db.collection("patients").document(playerID).get().await()
+            val player = playerSnapshot.toObject(Patient::class.java)
+            Resource.Success(player!!)
+        } catch (e: Exception) {
+            Log.e("PlayerRepository", "Failed to fetch player data: ${e.message}")
+            Resource.Error(e.message ?: "Failed to fetch player data")
         }
     }
 

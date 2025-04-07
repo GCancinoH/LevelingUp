@@ -22,7 +22,7 @@ import com.gcancino.levelingup.domain.database.entities.PlayerEntity
         BodyCompositionEntity::class, BloodPressureEntity::class, DailyQuestEntity::class,
         ExerciseProgressEntity::class, PlayerEntity::class
     ],
-    version = 2,
+    version = 10,
     exportSchema = false
 )
 @TypeConverters(Converters::class)

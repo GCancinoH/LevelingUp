@@ -5,7 +5,8 @@ enum class Improvement {
     MOBILITY,
     SELF_DEVELOPMENT,
     RECOVERY,
-    MENTAL_TOUGHNESS
+    MENTAL_TOUGHNESS,
+    ENDURANCE
 }
 
 enum class Genders {

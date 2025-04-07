@@ -3,10 +3,10 @@ package com.gcancino.levelingup.data.models.patient.initialData
 import java.util.Date
 
 data class InitialBodyComposition(
-    val date: Date,
-    val weight: Double,
-    val bmi: Double,
-    val visceralFat: Int,
-    val bodyFat: Double,
-    val muscleMass: Double,
+    val date: Date = Date(),
+    val weight: Double = 0.0,
+    val bmi: Double = 0.0,
+    val visceralFat: Int = 0,
+    val bodyFat: Double = 0.0,
+    val muscleMass: Double = 0.0,
 )

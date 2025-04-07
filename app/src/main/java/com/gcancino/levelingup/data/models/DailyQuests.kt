@@ -8,15 +8,15 @@ import com.gcancino.levelingup.data.models.quests.QuestType
 import java.time.LocalDate
 
 data class DailyQuest(
-    val id: String,
-    val qID: String,
+    val id: String = "",
+    val qID: String = "",
     val types: List<QuestType> = listOf(),
-    val title: String,
-    val description: String,
+    val title: String = "",
+    val description: String = "",
     val status: QuestStatus = QuestStatus.NOT_STARTED,
     val date: LocalDate = LocalDate.now(),
     val startedDate: LocalDate? = null,
     val finishedDate: LocalDate? = null,
-    val rewards: QuestRewards,
+    val rewards: QuestRewards? = QuestRewards(),
     val details: QuestDetails? = null
 )

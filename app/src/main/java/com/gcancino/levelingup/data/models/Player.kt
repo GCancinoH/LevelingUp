@@ -10,9 +10,9 @@ import com.gcancino.levelingup.data.models.patient.Streak
 import java.util.Date
 
 data class Patient(
-    val uid: String,
+    val uid: String = "",
     val displayName: String? = "",
-    val email: String,
+    val email: String = "",
     val photoUrl: String? = "",
     val birthday: Date? = null,
     val age: Int? = null,
