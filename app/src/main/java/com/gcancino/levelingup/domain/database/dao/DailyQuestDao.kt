@@ -37,4 +37,7 @@ interface DailyQuestDao {
 
     @Query("SELECT * FROM daily_quests")
     suspend fun getAllQuestStatic(): List<DailyQuestEntity>
+
+    @Query("SELECT COUNT(*) FROM daily_quests")
+    suspend fun getQuestsCount(): Int
 }

@@ -75,11 +75,21 @@ class PlayerRepository(
 
     suspend fun getPlayerImprovements(): List<Improvement> {
         val playerID = auth.currentUser?.uid ?: ""
+        Log.d("PlayerRepository", "Getting improvements for player ID: $playerID")
+
         return if (playerID.isNotEmpty()) {
             try {
                 withContext(Dispatchers.IO) {
                     val player = playerDB.getPlayerByID(playerID)
-                    player?.improvements ?: emptyList()
+                    Log.d("PlayerRepository", "Player from DB: $player")
+
+                    val improvements = player?.improvements ?: emptyList()
+                    Log.d("PlayerRepository", "Player improvements: $improvements")
+
+                    if (improvements.isEmpty()) {
+                        Log.w("PlayerRepository", "No improvements found for player ID: $playerID")
+                    }
+                    improvements
                 }
             } catch(e: Exception) {
                 Log.e("PlayerRepository", "Failed to get player improvements: ${e.message}")
@@ -87,6 +97,7 @@ class PlayerRepository(
             }
 
         } else {
+            Log.e("PlayerRepository", "Player ID is empty")
             emptyList()
         }
     }

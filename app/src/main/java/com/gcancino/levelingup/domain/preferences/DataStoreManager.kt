@@ -28,7 +28,7 @@ class DataStoreManager(
 
     val userPreferences: Flow<UserPreferences> = dataStore.data.map { preferences ->
         UserPreferences(
-            areDailyQuestsLoaded = preferences[PreferencesKey.ARE_QUESTS_LOADED] ?: false,
+            areDailyQuestsLoaded = preferences[PreferencesKey.ARE_QUESTS_LOADED] == false,
             lastQuestReset = preferences[PreferencesKey.LAST_QUEST_RESET]?.let {
                 LocalDate.parse(it)
             } ?: LocalDate.MIN,
@@ -36,7 +36,7 @@ class DataStoreManager(
                 ?.split(",")
                 ?.mapNotNull { QuestType.valueOf(it) }
                 ?.toSet() ?: emptySet(),
-            isPlayerDataSavedLocally = preferences[PreferencesKey.IS_PLAYER_DATA_SAVED_LOCALLY] ?: false
+            isPlayerDataSavedLocally = preferences[PreferencesKey.IS_PLAYER_DATA_SAVED_LOCALLY] == false
         )
     }
 

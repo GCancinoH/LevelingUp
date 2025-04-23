@@ -110,28 +110,55 @@ class QuestRepository(
     suspend fun initializeQuests(): Resource<Unit> {
         return try {
             val userPreferences = storeManager.userPreferences.first()
+            Log.d("QuestRepository", "Are daily quests loaded: ${userPreferences.areDailyQuestsLoaded}")
+
+
             if (!userPreferences.areDailyQuestsLoaded) {
                 val playerImprovements = playerRepository.getPlayerImprovements()
                 Log.d("QuestRepository", "Player improvements: $playerImprovements")
 
-                val filteredQuests = dailyQuests.filter { quest ->
-                    quest.types?.any { questType ->
-                        playerImprovements.any { it.name == questType.name }
-                    } == true
-                }
+                if (playerImprovements.isEmpty()) {
+                    Log.w(
+                        "QuestRepository",
+                        "No improvements found for player. Adding default quests anyway"
+                    )
+                    withContext(Dispatchers.IO) {
+                        questDB.insertAllQuests(dailyQuests)
+                    }
+                } else {
+                    val filteredQuests = dailyQuests.filter { quest ->
+                        val result = quest.types?.any { questType ->
+                            playerImprovements.any { improvement -> improvement.name == questType.name }
+                        } == true
 
-                withContext(Dispatchers.IO) {
-                    questDB.insertAllQuests(filteredQuests)
+                        if (!result) {
+                            Log.d(
+                                "QuestRepository",
+                                "Quest ${quest.title} filtered out - no matching improvement"
+                            )
+                        }
+
+                        result
+                    }
+                    Log.d("QuestRepository", "Filtered quests count: ${filteredQuests.size}")
+
+                    withContext(Dispatchers.IO) {
+                        questDB.insertAllQuests(filteredQuests)
+                        val count = questDB.getQuestsCount()
+                        Log.d("QuestRepository", "Quests in database after insert: $count")
+                    }
                 }
 
                 storeManager.updateQuestLoadedStatus(LocalDate.now())
                 Log.d("QuestRepository", "Quests initialized successfully")
                 Resource.Success(Unit)
             } else {
+                val count = withContext(Dispatchers.IO) { questDB.getQuestsCount() }
+                Log.d("QuestRepository", "Quests already loaded. Quests in database: $count")
                 Resource.Success(Unit)
             }
-        } catch(e: Exception) {
-            Log.e("QuestRepository", "Failed to initialize quests: ${e.message}", e)
+        } catch (e: Exception) {
+            Log.e("QuestRepository", "Error initializing quests: ${e.message}")
             Resource.Error(
                 message = "Failed to initialize quests: ${e.message}",
                 exception = e

@@ -15,10 +15,12 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 import java.util.UUID
 
 class DashboardViewModel(
@@ -39,8 +41,6 @@ class DashboardViewModel(
 
     init {
         initializeQuestsData()
-        getAllQuests()
-        observeDailyQuests()
     }
 
     fun getBodyCompositionData(): Flow<List<BodyCompositionData>> {
@@ -57,14 +57,22 @@ class DashboardViewModel(
         viewModelScope.launch {
             _questLoadingState.update { Resource.Loading() }
 
+            val preferences = storeManager.userPreferences.first()
+            Log.d("DashboardViewModel", "User preferences: ${preferences.areDailyQuestsLoaded}")
+
+            Log.d("DashboardViewModel", "Changing user preferences")
+            storeManager.changeQuestLoadedStatus(false)
+
             val result = questRepository.initializeQuests()
             _questLoadingState.update { result }
 
             if (result is Resource.Error) {
                 Log.e("DashboardViewModel", "Failed to initialize quests: ${result.message}")
+            } else {
+                Log.d("DashboardViewModel", "Quests initialized: $result")
+                getAllQuests()
+                observeDailyQuests()
             }
-
-            Log.d("DashboardViewModel", "Quests initialized: $result")
         }
     }
 
